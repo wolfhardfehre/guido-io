@@ -1,8 +1,14 @@
+# ignore mac files
+.DS_Store
+
 # ignore idea files
 .idea
 
 # ignore iypthon checkpoints
 .ipynb_checkpoints
+
+# ignore python cache
+__pycache__
 
 # ignore everything inside .cache but keep the folder
 .cache/*
