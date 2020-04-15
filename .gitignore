@@ -1,0 +1,9 @@
+# ignore idea files
+.idea
+
+# ignore iypthon checkpoints
+.ipynb_checkpoints
+
+# ignore everything inside .cache but keep the folder
+.cache/*
+!**/.gitkeep
