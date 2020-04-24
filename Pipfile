@@ -4,18 +4,16 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+ipyleaflet = "*"
+ipywidgets = "*"
+ipykernel = "*"
 
 [packages]
 requests = "*"
 pandas = "*"
-geopandas = "*"
 scipy = "*"
-ipyleaflet = "*"
-ipywidgets = "*"
-shapely = "*"
-matplotlib = "*"
-ipykernel = "*"
 mlrose = "*"
+ipyleaflet = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8.0"

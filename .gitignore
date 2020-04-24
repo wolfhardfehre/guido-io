@@ -10,6 +10,11 @@
 # ignore python cache
 __pycache__
 
-# ignore everything inside .cache but keep the folder
+# cache folder
 .cache/*
+
+# data folder
+.data/*
+
+# keep folders with this file
 !**/.gitkeep
