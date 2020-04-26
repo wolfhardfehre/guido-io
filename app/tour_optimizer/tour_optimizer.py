@@ -2,7 +2,7 @@ import mlrose
 
 from app.overpass.location import Location
 from app.routing.routing import Routing
-from app.routing.config import logging
+from app.config import logging
 from app.tour_optimizer.bucket import Bucket
 from app.tour_optimizer.poi import Poi
 from app.tour_optimizer.tour import Tour

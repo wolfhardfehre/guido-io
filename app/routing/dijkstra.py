@@ -1,4 +1,4 @@
-from app.routing.config import logging
+from app.config import logging
 from app.routing.algorithm import Algorithm
 from app.routing.priority_dict import PriorityDict
 

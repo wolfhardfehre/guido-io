@@ -1,5 +1,10 @@
+import logging
+import os
+
 import requests
 import pandas as pd
+from app.config import OVERPASS_PATH
+from app.commons.hashing import md5_hash
 from app.overpass.location import Location
 
 
@@ -24,8 +29,18 @@ class Overpass:
         return self.fetch(payload)
 
     def fetch(self, payload) -> pd.DataFrame:
-        response = requests.get(url=self.url, params={'data': payload}).json()
-        return pd.json_normalize(response, 'elements')
+        logging.debug(f'Requesting overpass data with: {payload}')
+        file_name = f'{OVERPASS_PATH}{md5_hash(payload)}.pkl'
+        if os.path.isfile(file_name):
+            logging.debug(f'Loading overpass response from "{file_name}" as pd.DataFrame!')
+            return pd.read_pickle(file_name)
+        else:
+            logging.debug(f'Fetching overpass response!')
+            response = requests.get(url=self.url, params={'data': payload}).json()
+            frame = pd.json_normalize(response, 'elements')
+            logging.debug(f'Saving overpass response to "{file_name}" as pd.DataFrame!')
+            frame.to_pickle(file_name)
+            return frame
 
     @property
     def url(self):

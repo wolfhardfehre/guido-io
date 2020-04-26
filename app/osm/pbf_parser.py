@@ -4,7 +4,7 @@ import pandas as pd
 
 from app.osm.pbf.pbf_file import PbfFile
 from app.osm.pbf.pbf_primitive_block import PdfPrimitiveBlock
-from app.routing.config import DATA_PATH
+from app.config import DATA_PATH
 
 
 def parse_block(blob):

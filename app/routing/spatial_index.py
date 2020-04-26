@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy.spatial import cKDTree
 from app.overpass.location import Location
-from app.routing.config import logging, NODES_PATH
+from app.config import logging, NODES_PATH
 
 
 class SpatialIndex:

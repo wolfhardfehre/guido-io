@@ -3,7 +3,7 @@ import pickle
 import pandas as pd
 
 from app.overpass.location import Location
-from app.routing.config import NODES_PATH, EDGES_PATH, GRAPH_PATH
+from app.config import NODES_PATH, EDGES_PATH, GRAPH_PATH
 from app.routing.spatial_index import SpatialIndex
 
 
