@@ -13,6 +13,7 @@ class OsmFeed(Feed):
         self._osm_nodes = nodes
         self._check_columns()
         super().__init__()
+        self._clean_nodes()
 
     def _check_columns(self):
         if not all([col in self._osm_ways.columns for col in (NODE_ID, FROM_NODE, TO_NODE)]):
@@ -42,6 +43,10 @@ class OsmFeed(Feed):
         mask = ways['oneway'] == '-1'
         oneways = self._swap_origin_destination(ways[mask])
         return pd.concat([ways[~mask], oneways])
+
+    def _clean_nodes(self):
+        edge_nodes_ids = self.edges[FROM_NODE].unique()
+        self.nodes = self.nodes.loc[edge_nodes_ids, :]
 
 
 if __name__ == '__main__':

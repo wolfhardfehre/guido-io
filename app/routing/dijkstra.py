@@ -28,6 +28,8 @@ class Dijkstra(Algorithm):
             distances[v] = priority_dict[v]
             if v == end:
                 break
+            if v not in self.graph:
+                continue
             for w in self.graph[v].neighbors:
                 distance = distances[v] + self.graph[v].neighbors[w]
                 if w in distances:

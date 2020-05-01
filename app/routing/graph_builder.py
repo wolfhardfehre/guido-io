@@ -1,10 +1,13 @@
 import logging
 import pandas as pd
 import pickle
+
+from app.osm.pbf_parser import PbfParser
 from app.overpass.location import Location
 from app.overpass.ways import Ways
-from app.config import NODES_PATH, EDGES_PATH, GRAPH_PATH
+from app.config import NODES_PATH, EDGES_PATH, GRAPH_PATH, DATA_PATH
 from app.routing.feeds.feed import Feed, TO_NODE, FROM_NODE
+from app.routing.feeds.osm_feed import OsmFeed
 from app.routing.feeds.overpass_feed import OverpassFeed
 from app.routing.node import Node
 
@@ -45,18 +48,23 @@ class GraphBuilder:
         return edges
 
 
+def feed_factory(feed_type='overpass'):
+    if feed_type == 'overpass':
+        ways = Ways()
+        ways.location = Location(13.383333, 52.516667)
+        ways.radius = 10000
+        ways.selection = '["highway"]'
+        ways_around = ways.around()
+        return OverpassFeed(ways=ways_around)
+    elif feed_type == 'osm':
+        file_name = f'{DATA_PATH}/berlin-latest.osm.pbf'
+        parser = PbfParser(file_name, use_cache=True)
+        return OsmFeed(ways=parser.ways, nodes=parser.nodes)
+    else:
+        raise RuntimeError('no valid feed type selected. Valid feed types are "overpass" or "osm"!')
+
+
 if __name__ == '__main__':
     logging.debug('fetching ways')
-    pd.options.display.max_columns = None
-    pd.options.display.width = 800
-
-    ways = Ways()
-    ways.location = Location(13.383333, 52.516667)
-    ways.radius = 10000
-    ways.selection = '["highway"]'
-    ways_around = ways.around()
-
-    overpass_feed = OverpassFeed(ways=ways_around)
-
-    builder = GraphBuilder(feed=overpass_feed)
+    builder = GraphBuilder(feed=feed_factory('osm'))
     builder.save()
