@@ -1,4 +1,4 @@
-from app.routing.config import logging
+from app.config import logging
 from app.routing.algorithm import Algorithm
 from app.routing.priority_dict import PriorityDict
 
@@ -28,6 +28,8 @@ class Dijkstra(Algorithm):
             distances[v] = priority_dict[v]
             if v == end:
                 break
+            if v not in self.graph:
+                continue
             for w in self.graph[v].neighbors:
                 distance = distances[v] + self.graph[v].neighbors[w]
                 if w in distances:

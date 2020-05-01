@@ -1,5 +1,6 @@
+import numpy as np
 from app.osm.pbf.osm_pb2 import PrimitiveBlock
-from app.osm.pbf.utils import read_blob_data, decoded_string_table
+from app.osm.pbf.pbf_utils import read_blob_data, decoded_string_table
 
 MEMBER_TYPE = {
     0: 'node',
@@ -48,12 +49,20 @@ class PdfPrimitiveBlock:
 
     def ways(self, ways):
         for way in ways:
-            refs = []
+            tags = self._tags(way)
+            if 'highway' not in tags:
+                continue
+            highway = tags['highway']
+            oneway = tags['oneway'] if 'oneway' in tags else 'no'
+            access = tags['access'] if 'access' in tags else 'no'
+            max_speed = tags['maxspeed'] if 'maxspeed' in tags else np.nan
             ref = 0
+            previous = None
             for delta in way.refs:
                 ref += delta
-                refs.append(ref)
-            yield 1, way.id, self._tags(way), refs
+                if previous is not None:
+                    yield 1, way.id, previous, ref, highway, oneway, access, max_speed, tags
+                previous = ref
 
     def relations(self, relations):
         for relation in relations:

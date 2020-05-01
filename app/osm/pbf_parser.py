@@ -1,10 +1,14 @@
 import logging
 import multiprocessing
+import os
+import re
 import pandas as pd
 
+from app.config import CACHE_PATH
+from app.commons.hashing import md5_hash
 from app.osm.pbf.pbf_file import PbfFile
 from app.osm.pbf.pbf_primitive_block import PdfPrimitiveBlock
-from app.routing.config import DATA_PATH
+from app.config import DATA_PATH
 
 
 def parse_block(blob):
@@ -15,19 +19,55 @@ def parse_block(blob):
 
 class PbfParser:
 
-    def __init__(self, file_path):
-        pdf_file = PbfFile(file_path)
-        logging.info('start parsing pbf file')
-        results = self._parse(pdf_file)
-        logging.info('finished parsing pbf file')
+    def __init__(self, file_path, use_cache=False):
+        self._file_path = file_path
+        self._use_cache = use_cache
+        area_name = self._cut_out_area_name()
+        self._nodes_path = f'{CACHE_PATH}/osm-nodes-{area_name}-{md5_hash(file_path)}.pkl'
+        self._ways_path = f'{CACHE_PATH}/osm-ways-{area_name}-{md5_hash(file_path)}.pkl'
         self.nodes = None
         self.ways = None
         self.relations = None
+        self._load_osm_elements()
+
+    def _cut_out_area_name(self):
+        result = re.search(f'{DATA_PATH}/(.*)-latest', self._file_path)
+        return result.group(1)
+
+    def _load_osm_elements(self):
+        if self._use_cache:
+            self._load_from_pickle()
+        if self.nodes is None or self.ways is None:
+            self._parse_from_pbf()
+            self._save_osm_elements()
+
+    def _load_from_pickle(self):
+        logging.debug('trying to load osm nodes and ways from pickle files')
+        if os.path.isfile(self._nodes_path):
+            logging.info(f'reading osm nodes from: {self._nodes_path}')
+            self.nodes = pd.read_pickle(self._nodes_path)
+        if os.path.isfile(self._ways_path):
+            logging.info(f'reading osm ways from: {self._ways_path}')
+            self.ways = pd.read_pickle(self._ways_path)
+
+    def _parse_from_pbf(self):
+        pdf_file = PbfFile(self._file_path)
+        logging.debug('start parsing pbf file')
+        results = self._parse_parallel(pdf_file)
+        logging.debug('finished parsing pbf file')
         self._merge(results)
-        logging.info('finished merging pbf file')
+        logging.debug('finished merging pbf file')
+
+    def _save_osm_elements(self):
+        logging.debug('saving osm nodes and ways to pickle files')
+        if self._use_cache:
+            logging.debug(f'saving osm nodes to: {self._nodes_path}')
+            self.nodes.to_pickle(self._nodes_path)
+            logging.debug(f'saving osm ways to: {self._ways_path}')
+            self.ways.to_pickle(self._ways_path)
 
     @staticmethod
-    def _parse(pdf_file):
+    def _parse_parallel(pdf_file):
         processors = multiprocessing.cpu_count()
         with multiprocessing.Pool(processes=processors) as pool:
             return pool.map(parse_block, pdf_file.blobs())
@@ -35,16 +75,17 @@ class PbfParser:
     def _merge(self, results):
         nodes, ways, relations = [], [], []
         for elements in results:
-            for element in elements:
-                if element[0] == 0:
-                    nodes.append(element[1:])
-                elif element[0] == 1:
-                    ways.append(element[1:])
-                elif element[0] == 2:
-                    relations.append(element[1:])
-        self.nodes = pd.DataFrame(nodes, columns=['id', 'tags', 'lon', 'lat'])
-        self.ways = pd.DataFrame(ways, columns=['id', 'tags', 'refs'])
-        self.relations = pd.DataFrame(relations, columns=['id', 'tags', 'members'])
+            osm_type = elements[0][0]
+            if osm_type == 0:
+                nodes.extend(elements)
+            elif osm_type == 1:
+                ways.extend(elements)
+            elif osm_type == 2:
+                relations.extend(elements)
+        self.nodes = pd.DataFrame(nodes, columns=['type', 'id', 'tags', 'lon', 'lat'])
+        way_columns = ['type', 'id', 'origin', 'destination', 'highway', 'oneway', 'access', 'max_speed', 'tags']
+        self.ways = pd.DataFrame(ways, columns=way_columns)
+        self.relations = pd.DataFrame(relations, columns=['type', 'id', 'tags', 'members'])
 
 
 if __name__ == '__main__':

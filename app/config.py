@@ -7,8 +7,10 @@ CACHE_PATH = '.cache'
 NODES_PATH = f'{CACHE_PATH}/nodes.pkl'
 EDGES_PATH = f'{CACHE_PATH}/edges.pkl'
 GRAPH_PATH = f'{CACHE_PATH}/graph.pkl'
+OVERPASS_PATH = f'{CACHE_PATH}/overpass-'
 
-FORMAT = '%(asctime)s.%(msecs)03d %(levelname)5s %(process)d --- [%(name)22s][%(lineno)d] %(filename)-20s : %(message)s'
+FORMAT = '%(asctime)s.%(msecs)03d %(levelname)5s %(process)d ---' \
+         '[%(name)22s][%(lineno)4d] %(filename)-20s : %(message)s'
 logging.basicConfig(
     level=LOG_LEVEL,
     format=FORMAT,

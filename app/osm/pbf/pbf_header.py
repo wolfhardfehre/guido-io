@@ -1,5 +1,5 @@
 from app.osm.pbf.osm_pb2 import HeaderBlock
-from app.osm.pbf.utils import read_blob_data
+from app.osm.pbf.pbf_utils import read_blob_data
 
 
 class PbfHeader:
