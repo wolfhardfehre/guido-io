@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from scipy.spatial import cKDTree
 from app.overpass.location import Location
+from app.routing.feeds.feed import LATITUDE, LONGITUDE
 from app.config import logging, NODES_PATH
 
 
@@ -9,7 +10,7 @@ class SpatialIndex:
 
     def __init__(self, nodes: pd.DataFrame):
         logging.debug('building spatial index')
-        geometries = nodes[['lon', 'lat']].to_numpy()
+        geometries = nodes[[LONGITUDE, LATITUDE]].to_numpy()
         self._nodes = nodes
         self._algorithm = cKDTree(geometries)
         self.bounds = self._bounds()
@@ -22,10 +23,10 @@ class SpatialIndex:
         return closest, distance
 
     def _bounds(self):
-        west = min(self._nodes['lon'])
-        east = max(self._nodes['lon'])
-        south = min(self._nodes['lat'])
-        north = max(self._nodes['lat'])
+        west = min(self._nodes[LONGITUDE])
+        east = max(self._nodes[LONGITUDE])
+        south = min(self._nodes[LATITUDE])
+        north = max(self._nodes[LATITUDE])
         return west, south, east, north
 
 

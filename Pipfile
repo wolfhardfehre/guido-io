@@ -15,6 +15,7 @@ scipy = "*"
 mlrose = "*"
 ipyleaflet = "*"
 six = "*"
+protobuf = "*"
 
 [requires]
 python_version = "3.8.0"

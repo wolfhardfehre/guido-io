@@ -4,7 +4,7 @@ import pickle
 from app.overpass.location import Location
 from app.overpass.ways import Ways
 from app.config import NODES_PATH, EDGES_PATH, GRAPH_PATH
-from app.routing.feeds.feed import Feed
+from app.routing.feeds.feed import Feed, TO_NODE, FROM_NODE
 from app.routing.feeds.overpass_feed import OverpassFeed
 from app.routing.node import Node
 
@@ -31,17 +31,17 @@ class GraphBuilder:
         logging.debug('building graph')
         adjacent = {}
         for row in joined.itertuples():
-            index = row.node1
+            index = row.origin
             if index not in adjacent:
                 adjacent[index] = Node(index, row.lat, row.lon)
-            adjacent.get(index).add_neighbor(row.node2, row.distance)
+            adjacent.get(index).add_neighbor(row.destination, row.meters)
         return adjacent
 
     @property
     def _joined(self):
         logging.debug('joining nodes and edges')
-        edges = self.edges.join(self.nodes, on='node1', rsuffix='_from')
-        edges = edges.join(self.nodes, on='node2', rsuffix='_to')
+        edges = self.edges.join(self.nodes, on=FROM_NODE, rsuffix='_from')
+        edges = edges.join(self.nodes, on=TO_NODE, rsuffix='_to')
         return edges
 
 

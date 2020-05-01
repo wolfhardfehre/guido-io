@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='OSMPBF',
   syntax='proto2',
   serialized_options=_b('\n\rcrosby.binary'),
-  serialized_pb=_b('\n\tosm.proto\x12\x06OSMPBF\"l\n\x04\x42lob\x12\x0b\n\x03raw\x18\x01 \x01(\x0c\x12\x10\n\x08raw_size\x18\x02 \x01(\x05\x12\x11\n\tzlib_data\x18\x03 \x01(\x0c\x12\x11\n\tlzma_data\x18\x04 \x01(\x0c\x12\x1f\n\x13OBSOLETE_bzip2_data\x18\x05 \x01(\x0c\x42\x02\x18\x01\"?\n\nBlobHeader\x12\x0c\n\x04type\x18\x01 \x02(\t\x12\x11\n\tindexdata\x18\x02 \x01(\x0c\x12\x10\n\x08\x64\x61tasize\x18\x03 \x02(\x05\"\x8d\x01\n\x0bHeaderBlock\x12 \n\x04\x62\x62ox\x18\x01 \x01(\x0b\x32\x12.OSMPBF.HeaderBBox\x12\x19\n\x11required_features\x18\x04 \x03(\t\x12\x19\n\x11optional_features\x18\x05 \x03(\t\x12\x16\n\x0ewritingprogram\x18\x10 \x01(\t\x12\x0e\n\x06source\x18\x11 \x01(\t\"F\n\nHeaderBBox\x12\x0c\n\x04left\x18\x01 \x02(\x12\x12\r\n\x05right\x18\x02 \x02(\x12\x12\x0b\n\x03top\x18\x03 \x02(\x12\x12\x0e\n\x06\x62ottom\x18\x04 \x02(\x12\"\xd2\x01\n\x0ePrimitiveBlock\x12(\n\x0bstringtable\x18\x01 \x02(\x0b\x32\x13.OSMPBF.StringTable\x12.\n\x0eprimitivegroup\x18\x02 \x03(\x0b\x32\x16.OSMPBF.PrimitiveGroup\x12\x18\n\x0bgranularity\x18\x11 \x01(\x05:\x03\x31\x30\x30\x12\x15\n\nlat_offset\x18\x13 \x01(\x03:\x01\x30\x12\x15\n\nlon_offset\x18\x14 \x01(\x03:\x01\x30\x12\x1e\n\x10\x64\x61te_granularity\x18\x12 \x01(\x05:\x04\x31\x30\x30\x30\"\xb7\x01\n\x0ePrimitiveGroup\x12\x1b\n\x05nodes\x18\x01 \x03(\x0b\x32\x0c.OSMPBF.Node\x12!\n\x05\x64\x65nse\x18\x02 \x01(\x0b\x32\x12.OSMPBF.DenseNodes\x12\x19\n\x04ways\x18\x03 \x03(\x0b\x32\x0b.OSMPBF.Way\x12#\n\trelations\x18\x04 \x03(\x0b\x32\x10.OSMPBF.Relation\x12%\n\nchangesets\x18\x05 \x03(\x0b\x32\x11.OSMPBF.ChangeSet\"\x18\n\x0bStringTable\x12\t\n\x01s\x18\x01 \x03(\x0c\"`\n\x04Info\x12\x13\n\x07version\x18\x01 \x01(\x05:\x02-1\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x11\n\tchangeset\x18\x03 \x01(\x03\x12\x0b\n\x03uid\x18\x04 \x01(\x05\x12\x10\n\x08user_sid\x18\x05 \x01(\r\"u\n\tDenseInfo\x12\x13\n\x07version\x18\x01 \x03(\x05\x42\x02\x10\x01\x12\x15\n\ttimestamp\x18\x02 \x03(\x12\x42\x02\x10\x01\x12\x15\n\tchangeset\x18\x03 \x03(\x12\x42\x02\x10\x01\x12\x0f\n\x03uid\x18\x04 \x03(\x11\x42\x02\x10\x01\x12\x14\n\x08user_sid\x18\x05 \x03(\x11\x42\x02\x10\x01\"\x17\n\tChangeSet\x12\n\n\x02id\x18\x01 \x02(\x03\"l\n\x04Node\x12\n\n\x02id\x18\x01 \x02(\x12\x12\x10\n\x04keys\x18\x02 \x03(\rB\x02\x10\x01\x12\x10\n\x04vals\x18\x03 \x03(\rB\x02\x10\x01\x12\x1a\n\x04info\x18\x04 \x01(\x0b\x32\x0c.OSMPBF.Info\x12\x0b\n\x03lat\x18\x08 \x02(\x12\x12\x0b\n\x03lon\x18\t \x02(\x12\"{\n\nDenseNodes\x12\x0e\n\x02id\x18\x01 \x03(\x12\x42\x02\x10\x01\x12$\n\tdenseinfo\x18\x05 \x01(\x0b\x32\x11.OSMPBF.DenseInfo\x12\x0f\n\x03lat\x18\x08 \x03(\x12\x42\x02\x10\x01\x12\x0f\n\x03lon\x18\t \x03(\x12\x42\x02\x10\x01\x12\x15\n\tkeys_vals\x18\n \x03(\x05\x42\x02\x10\x01\"c\n\x03Way\x12\n\n\x02id\x18\x01 \x02(\x03\x12\x10\n\x04keys\x18\x02 \x03(\rB\x02\x10\x01\x12\x10\n\x04vals\x18\x03 \x03(\rB\x02\x10\x01\x12\x1a\n\x04info\x18\x04 \x01(\x0b\x32\x0c.OSMPBF.Info\x12\x10\n\x04refs\x18\x08 \x03(\x12\x42\x02\x10\x01\"\xe0\x01\n\x08Relation\x12\n\n\x02id\x18\x01 \x02(\x03\x12\x10\n\x04keys\x18\x02 \x03(\rB\x02\x10\x01\x12\x10\n\x04vals\x18\x03 \x03(\rB\x02\x10\x01\x12\x1a\n\x04info\x18\x04 \x01(\x0b\x32\x0c.OSMPBF.Info\x12\x15\n\troles_sid\x18\x08 \x03(\x05\x42\x02\x10\x01\x12\x12\n\x06memids\x18\t \x03(\x12\x42\x02\x10\x01\x12.\n\x05types\x18\n \x03(\x0e\x32\x1b.OSMPBF.Relation.MemberTypeB\x02\x10\x01\"-\n\nMemberType\x12\x08\n\x04NODE\x10\x00\x12\x07\n\x03WAY\x10\x01\x12\x0c\n\x08RELATION\x10\x02\x42\x0f\n\rcrosby.binary')
+  serialized_pb=_b('\n\tosm.proto\x12\x06OSMPBF\"l\n\x04\x42lob\x12\x0b\n\x03raw\x18\x01 \x01(\x0c\x12\x10\n\x08raw_size\x18\x02 \x01(\x05\x12\x11\n\tzlib_data\x18\x03 \x01(\x0c\x12\x11\n\tlzma_data\x18\x04 \x01(\x0c\x12\x1f\n\x13OBSOLETE_bzip2_data\x18\x05 \x01(\x0c\x42\x02\x18\x01\"?\n\nBlobHeader\x12\x0c\n\x04type\x18\x01 \x02(\t\x12\x11\n\tindexdata\x18\x02 \x01(\x0c\x12\x10\n\x08\x64\x61tasize\x18\x03 \x02(\x05\"\x8d\x01\n\x0bHeaderBlock\x12 \n\x04\x62\x62ox\x18\x01 \x01(\x0b\x32\x12.OSMPBF.HeaderBBox\x12\x19\n\x11required_features\x18\x04 \x03(\t\x12\x19\n\x11optional_features\x18\x05 \x03(\t\x12\x16\n\x0ewritingprogram\x18\x10 \x01(\t\x12\x0e\n\x06source\x18\x11 \x01(\t\"F\n\nHeaderBBox\x12\x0c\n\x04left\x18\x01 \x02(\x12\x12\r\n\x05right\x18\x02 \x02(\x12\x12\x0b\n\x03top\x18\x03 \x02(\x12\x12\x0e\n\x06\x62ottom\x18\x04 \x02(\x12\"\xd2\x01\n\x0ePrimitiveBlock\x12(\n\x0bstringtable\x18\x01 \x02(\x0b\x32\x13.OSMPBF.StringTable\x12.\n\x0eprimitivegroup\x18\x02 \x03(\x0b\x32\x16.OSMPBF.PrimitiveGroup\x12\x18\n\x0bgranularity\x18\x11 \x01(\x05:\x03\x31\x30\x30\x12\x15\n\nlat_offset\x18\x13 \x01(\x03:\x01\x30\x12\x15\n\nlon_offset\x18\x14 \x01(\x03:\x01\x30\x12\x1e\n\x10\x64\x61te_granularity\x18\x12 \x01(\x05:\x04\x31\x30\x30\x30\"\x90\x01\n\x0ePrimitiveGroup\x12\x1b\n\x05nodes\x18\x01 \x03(\x0b\x32\x0c.OSMPBF.Node\x12!\n\x05\x64\x65nse\x18\x02 \x01(\x0b\x32\x12.OSMPBF.DenseNodes\x12\x19\n\x04ways\x18\x03 \x03(\x0b\x32\x0b.OSMPBF.Way\x12#\n\trelations\x18\x04 \x03(\x0b\x32\x10.OSMPBF.Relation\"\x18\n\x0bStringTable\x12\t\n\x01s\x18\x01 \x03(\x0c\"`\n\x04Info\x12\x13\n\x07version\x18\x01 \x01(\x05:\x02-1\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x11\n\tchangeset\x18\x03 \x01(\x03\x12\x0b\n\x03uid\x18\x04 \x01(\x05\x12\x10\n\x08user_sid\x18\x05 \x01(\r\"u\n\tDenseInfo\x12\x13\n\x07version\x18\x01 \x03(\x05\x42\x02\x10\x01\x12\x15\n\ttimestamp\x18\x02 \x03(\x12\x42\x02\x10\x01\x12\x15\n\tchangeset\x18\x03 \x03(\x12\x42\x02\x10\x01\x12\x0f\n\x03uid\x18\x04 \x03(\x11\x42\x02\x10\x01\x12\x14\n\x08user_sid\x18\x05 \x03(\x11\x42\x02\x10\x01\"l\n\x04Node\x12\n\n\x02id\x18\x01 \x02(\x12\x12\x10\n\x04keys\x18\x02 \x03(\rB\x02\x10\x01\x12\x10\n\x04vals\x18\x03 \x03(\rB\x02\x10\x01\x12\x1a\n\x04info\x18\x04 \x01(\x0b\x32\x0c.OSMPBF.Info\x12\x0b\n\x03lat\x18\x08 \x02(\x12\x12\x0b\n\x03lon\x18\t \x02(\x12\"{\n\nDenseNodes\x12\x0e\n\x02id\x18\x01 \x03(\x12\x42\x02\x10\x01\x12$\n\tdenseinfo\x18\x05 \x01(\x0b\x32\x11.OSMPBF.DenseInfo\x12\x0f\n\x03lat\x18\x08 \x03(\x12\x42\x02\x10\x01\x12\x0f\n\x03lon\x18\t \x03(\x12\x42\x02\x10\x01\x12\x15\n\tkeys_vals\x18\n \x03(\x05\x42\x02\x10\x01\"c\n\x03Way\x12\n\n\x02id\x18\x01 \x02(\x03\x12\x10\n\x04keys\x18\x02 \x03(\rB\x02\x10\x01\x12\x10\n\x04vals\x18\x03 \x03(\rB\x02\x10\x01\x12\x1a\n\x04info\x18\x04 \x01(\x0b\x32\x0c.OSMPBF.Info\x12\x10\n\x04refs\x18\x08 \x03(\x12\x42\x02\x10\x01\"\xe0\x01\n\x08Relation\x12\n\n\x02id\x18\x01 \x02(\x03\x12\x10\n\x04keys\x18\x02 \x03(\rB\x02\x10\x01\x12\x10\n\x04vals\x18\x03 \x03(\rB\x02\x10\x01\x12\x1a\n\x04info\x18\x04 \x01(\x0b\x32\x0c.OSMPBF.Info\x12\x15\n\troles_sid\x18\x08 \x03(\x05\x42\x02\x10\x01\x12\x12\n\x06memids\x18\t \x03(\x12\x42\x02\x10\x01\x12.\n\x05types\x18\n \x03(\x0e\x32\x1b.OSMPBF.Relation.MemberTypeB\x02\x10\x01\"-\n\nMemberType\x12\x08\n\x04NODE\x10\x00\x12\x07\n\x03WAY\x10\x01\x12\x0c\n\x08RELATION\x10\x02\x42\x0f\n\rcrosby.binary')
 )
 
 
@@ -46,8 +46,8 @@ _RELATION_MEMBERTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1595,
-  serialized_end=1640,
+  serialized_start=1531,
+  serialized_end=1576,
 )
 _sym_db.RegisterEnumDescriptor(_RELATION_MEMBERTYPE)
 
@@ -368,13 +368,6 @@ _PRIMITIVEGROUP = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='changesets', full_name='OSMPBF.PrimitiveGroup.changesets', index=4,
-      number=5, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -388,7 +381,7 @@ _PRIMITIVEGROUP = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=626,
-  serialized_end=809,
+  serialized_end=770,
 )
 
 
@@ -418,8 +411,8 @@ _STRINGTABLE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=811,
-  serialized_end=835,
+  serialized_start=772,
+  serialized_end=796,
 )
 
 
@@ -477,8 +470,8 @@ _INFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=837,
-  serialized_end=933,
+  serialized_start=798,
+  serialized_end=894,
 )
 
 
@@ -536,39 +529,8 @@ _DENSEINFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=935,
-  serialized_end=1052,
-)
-
-
-_CHANGESET = _descriptor.Descriptor(
-  name='ChangeSet',
-  full_name='OSMPBF.ChangeSet',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='id', full_name='OSMPBF.ChangeSet.id', index=0,
-      number=1, type=3, cpp_type=2, label=2,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  serialized_options=None,
-  is_extendable=False,
-  syntax='proto2',
-  extension_ranges=[],
-  oneofs=[
-  ],
-  serialized_start=1054,
-  serialized_end=1077,
+  serialized_start=896,
+  serialized_end=1013,
 )
 
 
@@ -633,8 +595,8 @@ _NODE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1079,
-  serialized_end=1187,
+  serialized_start=1015,
+  serialized_end=1123,
 )
 
 
@@ -692,8 +654,8 @@ _DENSENODES = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1189,
-  serialized_end=1312,
+  serialized_start=1125,
+  serialized_end=1248,
 )
 
 
@@ -751,8 +713,8 @@ _WAY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1314,
-  serialized_end=1413,
+  serialized_start=1250,
+  serialized_end=1349,
 )
 
 
@@ -825,8 +787,8 @@ _RELATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1416,
-  serialized_end=1640,
+  serialized_start=1352,
+  serialized_end=1576,
 )
 
 _HEADERBLOCK.fields_by_name['bbox'].message_type = _HEADERBBOX
@@ -836,7 +798,6 @@ _PRIMITIVEGROUP.fields_by_name['nodes'].message_type = _NODE
 _PRIMITIVEGROUP.fields_by_name['dense'].message_type = _DENSENODES
 _PRIMITIVEGROUP.fields_by_name['ways'].message_type = _WAY
 _PRIMITIVEGROUP.fields_by_name['relations'].message_type = _RELATION
-_PRIMITIVEGROUP.fields_by_name['changesets'].message_type = _CHANGESET
 _NODE.fields_by_name['info'].message_type = _INFO
 _DENSENODES.fields_by_name['denseinfo'].message_type = _DENSEINFO
 _WAY.fields_by_name['info'].message_type = _INFO
@@ -852,7 +813,6 @@ DESCRIPTOR.message_types_by_name['PrimitiveGroup'] = _PRIMITIVEGROUP
 DESCRIPTOR.message_types_by_name['StringTable'] = _STRINGTABLE
 DESCRIPTOR.message_types_by_name['Info'] = _INFO
 DESCRIPTOR.message_types_by_name['DenseInfo'] = _DENSEINFO
-DESCRIPTOR.message_types_by_name['ChangeSet'] = _CHANGESET
 DESCRIPTOR.message_types_by_name['Node'] = _NODE
 DESCRIPTOR.message_types_by_name['DenseNodes'] = _DENSENODES
 DESCRIPTOR.message_types_by_name['Way'] = _WAY
@@ -921,13 +881,6 @@ DenseInfo = _reflection.GeneratedProtocolMessageType('DenseInfo', (_message.Mess
   # @@protoc_insertion_point(class_scope:OSMPBF.DenseInfo)
   })
 _sym_db.RegisterMessage(DenseInfo)
-
-ChangeSet = _reflection.GeneratedProtocolMessageType('ChangeSet', (_message.Message,), {
-  'DESCRIPTOR' : _CHANGESET,
-  '__module__' : 'osm_pb2'
-  # @@protoc_insertion_point(class_scope:OSMPBF.ChangeSet)
-  })
-_sym_db.RegisterMessage(ChangeSet)
 
 Node = _reflection.GeneratedProtocolMessageType('Node', (_message.Message,), {
   'DESCRIPTOR' : _NODE,
