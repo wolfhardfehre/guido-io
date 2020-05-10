@@ -7,6 +7,8 @@ CACHE_PATH = '.cache'
 NODES_PATH = f'{CACHE_PATH}/nodes.pkl'
 EDGES_PATH = f'{CACHE_PATH}/edges.pkl'
 GRAPH_PATH = f'{CACHE_PATH}/graph.pkl'
+INDEX_PATH = f'{CACHE_PATH}/index.pkl'
+
 OVERPASS_PATH = f'{CACHE_PATH}/overpass-'
 
 FORMAT = '%(asctime)s.%(msecs)03d %(levelname)5s %(process)d ---' \

@@ -30,12 +30,11 @@ class PdfPrimitiveBlock:
                 yield self.dense_nodes(group.dense)
             elif group.ways:
                 yield self.ways(group.ways)
-            elif group.relations:
-                yield self.relations(group.relations)
 
-    def nodes(self, nodes):
+    @staticmethod
+    def nodes(nodes):
         for node in nodes:
-            yield 0, node.id, self._tags(node), node.lon, node.lat
+            yield 0, node.id, node.lon, node.lat
 
     def dense_nodes(self, nodes):
         current_id, current_lon, current_lat, tag_idx = 0, 0, 0, 0
@@ -45,7 +44,7 @@ class PdfPrimitiveBlock:
             current_lat += lat
             tags, tag_idx = self._dense_tags(nodes, tag_idx)
             lat, lon = self._transform(current_lat, current_lon)
-            yield 0, current_id, tags, lon, lat
+            yield 0, current_id, lon, lat
 
     def ways(self, ways):
         for way in ways:
@@ -53,7 +52,8 @@ class PdfPrimitiveBlock:
             if 'highway' not in tags:
                 continue
             highway = tags['highway']
-            oneway = tags['oneway'] if 'oneway' in tags else 'no'
+            swap_nodes = 'oneway' in tags and tags['oneway'] == '-1'
+            oneway = tags['oneway'] == 'yes' or swap_nodes if 'oneway' in tags else False
             access = tags['access'] if 'access' in tags else 'no'
             max_speed = tags['maxspeed'] if 'maxspeed' in tags else np.nan
             ref = 0
@@ -61,7 +61,10 @@ class PdfPrimitiveBlock:
             for delta in way.refs:
                 ref += delta
                 if previous is not None:
-                    yield 1, way.id, previous, ref, highway, oneway, access, max_speed, tags
+                    if swap_nodes:
+                        yield 1, ref, previous, highway, oneway, max_speed, access
+                    else:
+                        yield 1, previous, ref, highway, oneway, max_speed, access
                 previous = ref
 
     def relations(self, relations):
