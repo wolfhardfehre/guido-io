@@ -1,7 +1,7 @@
 from app.overpass.location import Location
-from app.routing.algorithm import Algorithm
+from app.routing.algorithms.algorithm import Algorithm
 from app.routing.graph import Graph
-from app.routing.dijkstra import Dijkstra
+from app.routing.algorithms.dijkstra import Dijkstra
 from app.routing.path import Path
 
 

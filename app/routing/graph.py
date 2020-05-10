@@ -3,32 +3,35 @@ import pickle
 import pandas as pd
 
 from app.overpass.location import Location
-from app.config import NODES_PATH, EDGES_PATH, GRAPH_PATH
-from app.routing.spatial_index import SpatialIndex
+from app.config import NODES_PATH, GRAPH_PATH, INDEX_PATH
 
 
 class Graph:
     instance = None
 
-    def __init__(self, graph, nodes, edges):
+    def __init__(self, graph, nodes, index):
         self.graph = graph
         self.nodes = nodes
-        self.edges = edges
-        self.index = SpatialIndex(nodes)
+        self.index = index
 
     @classmethod
     def load_default(cls):
         if cls.instance is None:
             logging.debug('load nodes from file')
             nodes = pd.read_pickle(NODES_PATH)
-            logging.debug('load edges from file')
-            edges = pd.read_pickle(EDGES_PATH)
             logging.debug('load graph from file')
             with open(GRAPH_PATH, 'rb') as handle:
                 graph = pickle.load(handle)
             logging.debug('load graph finished')
-            cls.instance = Graph(graph, nodes, edges)
+            logging.debug('load spatial index from file')
+            with open(INDEX_PATH, 'rb') as handle:
+                index = pickle.load(handle)
+            logging.debug('load spatial index finished')
+            cls.instance = Graph(graph, nodes, index)
         return cls.instance
+
+    def path_of(self, node_id_sequence):
+        return self.nodes.loc[node_id_sequence]
 
     def closest_to(self, location: Location):
         return self.index.closest_to(location)

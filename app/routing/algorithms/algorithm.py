@@ -14,10 +14,6 @@ class Algorithm(abc.ABC):
     def graph(self):
         return self._graph.graph
 
-    @property
-    def nodes(self):
-        return self._graph.nodes
-
     @graph.setter
     def graph(self, graph: Graph):
         self._graph = graph

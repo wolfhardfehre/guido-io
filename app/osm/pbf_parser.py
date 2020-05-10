@@ -73,19 +73,23 @@ class PbfParser:
             return pool.map(parse_block, pdf_file.blobs())
 
     def _merge(self, results):
+        logging.debug('separating nodes, ways and relations')
         nodes, ways, relations = [], [], []
         for elements in results:
+            if not elements:
+                continue
             osm_type = elements[0][0]
             if osm_type == 0:
                 nodes.extend(elements)
             elif osm_type == 1:
                 ways.extend(elements)
-            elif osm_type == 2:
-                relations.extend(elements)
-        self.nodes = pd.DataFrame(nodes, columns=['type', 'id', 'tags', 'lon', 'lat'])
-        way_columns = ['type', 'id', 'origin', 'destination', 'highway', 'oneway', 'access', 'max_speed', 'tags']
+        logging.debug('building nodes and ways data frame')
+        node_columns = ['type', 'id', 'lon', 'lat']
+        self.nodes = pd.DataFrame(nodes, columns=node_columns)
+        self.nodes.drop(columns='type', inplace=True)
+        way_columns = ['type', 'origin', 'destination', 'highway', 'oneway', 'max_speed', 'access']
         self.ways = pd.DataFrame(ways, columns=way_columns)
-        self.relations = pd.DataFrame(relations, columns=['type', 'id', 'tags', 'members'])
+        self.ways.drop(columns='type', inplace=True)
 
 
 if __name__ == '__main__':
@@ -93,8 +97,8 @@ if __name__ == '__main__':
     pd.options.display.max_columns = None
     pd.options.display.width = 800
 
-    file_name = f'{DATA_PATH}/berlin-latest.osm.pbf'
-    parser = PbfParser(file_name)
+    osm_area = 'germany'
+    file_name = f'{DATA_PATH}/{osm_area}-latest.osm.pbf'
+    parser = PbfParser(file_name, use_cache=True)
     print(parser.nodes.head())
     print(parser.ways.head())
-    print(parser.relations.head())
