@@ -58,7 +58,13 @@ def feed_factory(feed_type='overpass', osm_area='berlin', use_cache=True):
         # TODO: download from geofabrik if not exists
         file_name = f'{DATA_PATH}/{osm_area}-latest.osm.pbf'
         parser = PbfParser(file_name, use_cache=use_cache)
-        return OsmFeed(ways=parser.ways, nodes=parser.nodes)
+        good_highways = ['tertiary', 'primary', 'secondary', 'trunk',
+                         'residential', 'living_street', 'path',
+                         'unclassified', 'track', 'primary_link', 'secondary_link', 'cycleway']
+        logging.debug(f'before: {parser.ways.shape[0]}')
+        ways = parser.ways[parser.ways['highway'].isin(good_highways)]
+        logging.debug(f'after: {ways.shape[0]}')
+        return OsmFeed(ways=ways, nodes=parser.nodes)
     else:
         raise RuntimeError('no valid feed type selected. Valid feed types are "overpass" or "osm"!')
 
