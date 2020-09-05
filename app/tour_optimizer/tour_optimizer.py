@@ -1,4 +1,4 @@
-import mlrose
+import mlrose_hiive as mlrose
 
 from app.overpass.location import Location
 from app.routing.routing import Routing
@@ -27,7 +27,7 @@ class TourOptimizer:
             maximize=False
         )
         logging.debug('run randomized optimization algorithm')
-        best_state, best_fitness = mlrose.genetic_alg(problem_fit, random_state=2, **kwargs)
+        best_state, best_fitness, fitness_curve = mlrose.genetic_alg(problem_fit, random_state=2, **kwargs)
         segments = bucket.segments(self._generate_keys(best_state))
         meters = sum([segment.path.distance for segment in segments])
         return Tour(segments, meters)
