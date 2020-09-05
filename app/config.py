@@ -1,9 +1,11 @@
 import logging
+import os
 
-LOG_LEVEL = logging.DEBUG
+LOG_LEVEL = logging.INFO
 
-DATA_PATH = '.data'
-CACHE_PATH = '.cache'
+SRC_PATH = os.path.dirname(os.path.abspath(__file__))
+DATA_PATH = f'{SRC_PATH}/../.data'
+CACHE_PATH = f'{SRC_PATH}/../.cache'
 NODES_PATH = f'{CACHE_PATH}/nodes.pkl'
 EDGES_PATH = f'{CACHE_PATH}/edges.pkl'
 GRAPH_PATH = f'{CACHE_PATH}/graph.pkl'
