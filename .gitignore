@@ -13,8 +13,5 @@ __pycache__
 # cache folder
 .cache/*
 
-# data folder
-.data/*
-
 # keep folders with this file
 !**/.gitkeep

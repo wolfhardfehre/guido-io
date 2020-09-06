@@ -25,12 +25,14 @@ jupyter labextension install jupyter-leaflet
 
 ## Usage
 
-1) Load OSM data to build the routing graph
+1) Load data to build the routing graph
 
-Option A: Load data from Overpass: `python3 app/routing/graph_builder.py`
+`python3 app/routing/graph_builder.py`
 
-Option B: Load data from OSM-PBF: `python3 app/osm/pbf_parser.py`
+2) Get route length of shortest path between two locations
 
->> You need to download an OSM pbf file first, e.g. from [GEOFABRIK](https://download.geofabrik.de/)
+`python3 app/routing/routing.py`
 
-2) Run
+3) Get optimal path to visit multiple locations 
+
+`python3 app/tour_optimizer/tour_optimizer.py`
