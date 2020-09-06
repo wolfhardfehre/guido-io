@@ -31,7 +31,7 @@ class PbfParser:
         self._load_osm_elements()
 
     def _cut_out_area_name(self):
-        result = re.search(f'{DATA_PATH}/(.*)-latest', self._file_path)
+        result = re.search(f'{CACHE_PATH}/(.*)-latest', self._file_path)
         return result.group(1)
 
     def _load_osm_elements(self):
