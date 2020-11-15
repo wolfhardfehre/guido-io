@@ -6,10 +6,27 @@ from app.routing.feeds.feed import Feed, NODE_ID, LATITUDE, LONGITUDE, FROM_NODE
 
 
 class OverpassFeed(Feed):
+    __TYPE__ = 'overpass'
 
-    def __init__(self, ways: pd.DataFrame):
+    @classmethod
+    def around(cls, longitude, latitude, **kwargs):
+        radius = kwargs.get('radius', 10_000)
+        selection = kwargs.get('selection', '["highway"]')
+
+        ways = Ways()
+        ways.location = Location(longitude=longitude, latitude=latitude)
+        ways.radius = radius
+        ways.selection = selection
+        return OverpassFeed(name=f'around({round(longitude, 3)}, {round(latitude, 3)})', ways=ways.around())
+
+    def __init__(self, name: str, ways: pd.DataFrame):
+        self._name = name
         self.ways = ways
         super().__init__()
+
+    @property
+    def name(self):
+        return self._name
 
     def _nodes(self):
         logging.debug('building nodes')
@@ -49,14 +66,8 @@ if __name__ == '__main__':
     pd.options.display.max_columns = None
     pd.options.display.width = 800
 
-    overpass_ways = Ways()
-    overpass_ways.location = Location(13.383333, 52.516667)
-    overpass_ways.radius = 1000
-    overpass_ways.selection = '["highway"]'
-    ways_around = overpass_ways.around()
-
-    overpass_feed = OverpassFeed(ways=ways_around)
+    feed = OverpassFeed.around(longitude=13.383333, latitude=52.516667)
     logging.debug('finished')
 
-    print(overpass_feed.nodes.head())
-    print(overpass_feed.edges.head())
+    print(feed.nodes.head())
+    print(feed.edges.head())
