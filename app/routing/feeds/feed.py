@@ -13,6 +13,7 @@ LONGITUDE = 'lon'
 
 
 class Feed(abc.ABC):
+    __TYPE__ = None
 
     def __init__(self):
         self.nodes = self._nodes()
@@ -23,6 +24,15 @@ class Feed(abc.ABC):
         self.nodes.to_pickle(NODES_PATH)
         logging.debug(f'Saving {len(self.edges)} edges')
         self.edges.to_pickle(EDGES_PATH)
+
+    @property
+    def type(self):
+        return self.__TYPE__
+
+    @property
+    @abc.abstractmethod
+    def name(self):
+        raise NotImplementedError
 
     @abc.abstractmethod
     def _nodes(self):

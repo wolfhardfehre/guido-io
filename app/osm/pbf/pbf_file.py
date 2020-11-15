@@ -1,8 +1,8 @@
+import os
 import struct
 
 from app.osm.pbf.osm_pb2 import BlobHeader
 from app.osm.pbf.pbf_header import PbfHeader
-from app.osm.pbf.pbf_primitive_block import PdfPrimitiveBlock
 
 SUPPORTED_FEATURES = {'OsmSchema-V0.6', 'DenseNodes'}
 
@@ -11,14 +11,13 @@ class PbfFile:
     def __init__(self, file_name):
         self.file_name = file_name
         self.file = open(file_name, 'rb')
+        self.file.seek(0, os.SEEK_END)
+        self.size = self.file.tell()
+        self.file.seek(0, 0)
         self.next_blob_position = self.prev_blob_position = 0
         header_offsets = self._skip_header()
         header = PbfHeader(self.file_name, header_offsets['blob_position'], header_offsets['blob_size'])
         self._check_features(header)
-
-    def primitive_blocks(self):
-        for pos in self.blobs():
-            yield PdfPrimitiveBlock(self.file_name, pos['blob_position'], pos['blob_size'])
 
     def blobs(self):
         while True:

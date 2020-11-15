@@ -1,19 +1,43 @@
 import logging
 import pandas as pd
+
+from app.osm.geofabrik import Geofabrik
 from app.osm.pbf_parser import PbfParser
 from app.routing.feeds.feed import Feed, NODE_ID, LATITUDE, LONGITUDE, FROM_NODE, TO_NODE, DISTANCE
-from app.config import DATA_PATH
+
+GOOD_HIGHWAYS = [
+    'tertiary', 'primary', 'secondary', 'trunk',
+    'residential', 'living_street', 'path',
+    'unclassified', 'track', 'primary_link',
+    'secondary_link', 'cycleway'
+]
 
 
 class OsmFeed(Feed):
+    __TYPE__ = 'osm'
 
-    def __init__(self, ways: pd.DataFrame, nodes: pd.DataFrame):
+    @classmethod
+    def area(cls, **kwargs):
+        use_cache = kwargs.get('use_cache', True)
+        file_name = Geofabrik.fetch(**kwargs)
+        parser = PbfParser(file_name, use_cache=use_cache)
+        logging.debug(f'before: {parser.ways.shape[0]}')
+        ways = parser.ways[parser.ways['highway'].isin(GOOD_HIGHWAYS)]
+        logging.debug(f'after: {ways.shape[0]}')
+        return OsmFeed(name=parser.area_name, ways=ways, nodes=parser.nodes)
+
+    def __init__(self, name: str, ways: pd.DataFrame, nodes: pd.DataFrame):
         logging.debug('creating osm feed')
+        self._name = name
         self._osm_ways = ways
         self._osm_nodes = nodes
         self._check_columns()
         super().__init__()
         self._clean_nodes()
+
+    @property
+    def name(self):
+        return self._name
 
     def _check_columns(self):
         if not all([col in self._osm_ways.columns for col in (FROM_NODE, TO_NODE)]):
@@ -47,11 +71,7 @@ if __name__ == '__main__':
     pd.options.display.max_columns = None
     pd.options.display.width = 800
 
-    osm_area = 'brandenburg'
-    file_name = f'{DATA_PATH}/{osm_area}-latest.osm.pbf'
-    parser = PbfParser(file_name, use_cache=True)
-
-    feed = OsmFeed(ways=parser.ways, nodes=parser.nodes)
+    feed = OsmFeed.area(state='berlin')
     logging.debug('finished')
 
     print(feed.nodes.head())

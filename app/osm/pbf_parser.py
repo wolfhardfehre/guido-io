@@ -1,11 +1,11 @@
 import logging
-import multiprocessing
+from multiprocessing import Pool, cpu_count
 import os
 import re
 import pandas as pd
 
+from app.commons.progress_bar import ProgressBar
 from app.config import CACHE_PATH
-from app.commons.hashing import md5_hash
 from app.osm.pbf.pbf_file import PbfFile
 from app.osm.pbf.pbf_primitive_block import PdfPrimitiveBlock
 from app.config import DATA_PATH
@@ -22,9 +22,9 @@ class PbfParser:
     def __init__(self, file_path, use_cache=False):
         self._file_path = file_path
         self._use_cache = use_cache
-        area_name = self._cut_out_area_name()
-        self._nodes_path = f'{CACHE_PATH}/osm-nodes-{area_name}-{md5_hash(file_path)}.pkl'
-        self._ways_path = f'{CACHE_PATH}/osm-ways-{area_name}-{md5_hash(file_path)}.pkl'
+        self.area_name = self._cut_out_area_name()
+        self._nodes_path = f'{CACHE_PATH}/osm-{self.area_name}-nodes.pkl'
+        self._ways_path = f'{CACHE_PATH}/osm-{self.area_name}-ways.pkl'
         self.nodes = None
         self.ways = None
         self.relations = None
@@ -51,9 +51,9 @@ class PbfParser:
             self.ways = pd.read_pickle(self._ways_path)
 
     def _parse_from_pbf(self):
-        pdf_file = PbfFile(self._file_path)
+        pbf_file = PbfFile(self._file_path)
         logging.debug('start parsing pbf file')
-        results = self._parse_parallel(pdf_file)
+        results = self._parse_parallel(pbf_file)
         logging.debug('finished parsing pbf file')
         self._merge(results)
         logging.debug('finished merging pbf file')
@@ -66,11 +66,16 @@ class PbfParser:
             logging.debug(f'saving osm ways to: {self._ways_path}')
             self.ways.to_pickle(self._ways_path)
 
-    @staticmethod
-    def _parse_parallel(pdf_file):
-        processors = multiprocessing.cpu_count()
-        with multiprocessing.Pool(processes=processors) as pool:
-            return pool.map(parse_block, pdf_file.blobs())
+    def _parse_parallel(self, pbf_file):
+        with Pool(processes=cpu_count()) as pool:
+            results = []
+            blobs = [b for b in pbf_file.blobs()]
+            prefix = f'Parsing Protobuf [{self.area_name}]'
+            progress_bar = ProgressBar(total=len(blobs), prefix=prefix)
+            for result in pool.imap(parse_block, blobs):
+                progress_bar.update()
+                results.append(result)
+        return results
 
     def _merge(self, results):
         logging.debug('separating nodes, ways and relations')
