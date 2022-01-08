@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2020 Nice Fontaine
+Copyright (c) 2022 Nice Fontaine
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
