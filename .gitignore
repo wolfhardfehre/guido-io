@@ -10,8 +10,5 @@
 # ignore python cache
 __pycache__
 
-# cache folder
-.cache/*
-
-# keep folders with this file
-!**/.gitkeep
+# pyenv
+.python-version
