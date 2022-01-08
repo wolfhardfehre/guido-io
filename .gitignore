@@ -10,8 +10,5 @@
 # ignore python cache
 __pycache__
 
-# cache folder
-.cache/*
-
 # pyenv
 .python-version
