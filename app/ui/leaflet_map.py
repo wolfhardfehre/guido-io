@@ -1,5 +1,4 @@
-import pandas as pd
-from ipyleaflet import basemap_to_tiles, basemaps, FullScreenControl, Map, Polyline, TileLayer
+from ipyleaflet import basemap_to_tiles, basemaps, FullScreenControl, Map, TileLayer
 
 from app.commons.layer import Layer
 from app.utils.maputils import center
