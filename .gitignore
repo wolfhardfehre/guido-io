@@ -13,5 +13,5 @@ __pycache__
 # cache folder
 .cache/*
 
-# keep folders with this file
-!**/.gitkeep
+# pyenv
+.python-version
