@@ -1,11 +1,15 @@
 from queue import PriorityQueue
+from typing import Tuple
+
+import pandas as pd
+
 from app.config import logging
 from app.routing.algorithms.algorithm import Algorithm
 
 
 class Dijkstra(Algorithm):
 
-    def shortest_path(self, start, end):
+    def shortest_path(self, start: int, end: int) -> Tuple[pd.DataFrame, float]:
         logging.debug('running dijkstra')
         distances, predecessors = self._dijkstra(start, end)
         distance = distances[end]
@@ -16,11 +20,11 @@ class Dijkstra(Algorithm):
                 break
             end = predecessors[end]
         node_id_sequence.reverse()
-        logging.debug(f'shortest path: {node_id_sequence}')
+        logging.debug('shortest path: %s', node_id_sequence)
         path_nodes = self._graph.path_of(node_id_sequence)
         return path_nodes, distance
 
-    def _dijkstra(self, start, end):
+    def _dijkstra(self, start: int, end: int) -> Tuple[dict, dict]:
         distances, predecessors = {}, {}
         queue = PriorityQueue()
         queue.put((0, start))

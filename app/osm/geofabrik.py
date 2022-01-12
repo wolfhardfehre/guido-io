@@ -1,9 +1,12 @@
-import os
 import logging
+from pathlib import Path
+from typing import Any, List
+
 import requests
+from requests import Response
 
 from app.commons.progress_bar import ProgressBar
-from app.config import CACHE_PATH
+from app.paths import CACHE_PATH
 
 
 class Geofabrik:
@@ -11,43 +14,39 @@ class Geofabrik:
     CHUNK_SIZE = 50 * 1024
 
     @classmethod
-    def fetch(cls, **kwargs):
+    def fetch(cls, **kwargs) -> Path:
         address = cls._address(**kwargs)
         url = f'{Geofabrik.BASE_URL}/{"/".join(address)}-latest.osm.pbf'
-        file_name = f'{CACHE_PATH}/{"-".join(address)}-latest.osm.pbf'
-        if not os.path.isfile(file_name):
-            logging.debug(f'fetching data from {url}')
-            cls._download(url, file_name)
-            logging.debug(f'Saved data in {file_name}')
+        filepath = CACHE_PATH / f'{address[-1]}-latest.osm.pbf'
+        if not filepath.exists():
+            logging.debug('fetching data from %s', url)
+            cls._download(url, filepath)
+            logging.debug('Saved data in %s',  filepath)
         else:
-            logging.info(f'Pbf file is already in cache: {file_name}')
-        return file_name
+            logging.info('Pbf file is already in cache: %s', filepath)
+        return filepath
 
     @staticmethod
-    def _address(**kwargs):
+    def _address(**kwargs: Any) -> List['str']:
         continent = kwargs.get('continent', None)
         country = kwargs.get('country', None)
         state = kwargs.get('state', None)
         addresses = [continent, country, state]
         return [address for address in addresses if address]
 
-    @staticmethod
-    def _file_name(url):
-        return f'{CACHE_PATH}/{url.split("/")[-1]}'
-
     @classmethod
-    def _download(cls, url, file_name):
+    def _download(cls, url: str, filepath: Path) -> Path:
         with requests.get(url, stream=True) as stream:
             stream.raise_for_status()
-            cls._write_chunks(file_name, stream)
-        return file_name
+            cls._write_chunks(filepath=filepath, stream=stream)
+        return filepath
 
     @staticmethod
-    def _write_chunks(file_name, stream):
+    def _write_chunks(filepath: Path, stream: Response) -> None:
         total = int(stream.headers['Content-Length'])
-        prefix = f'Downloading [{file_name.split("/")[-1]}]'
+        prefix = f'Downloading [{filepath.stem}]'
         progress_bar = ProgressBar(total=total, prefix=prefix)
-        with open(file_name, 'wb') as file:
+        with filepath.open(mode='wb') as file:
             for chunk in stream.iter_content(chunk_size=Geofabrik.CHUNK_SIZE):
                 file.write(chunk)
                 progress_bar.update(len(chunk))

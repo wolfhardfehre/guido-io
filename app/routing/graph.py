@@ -1,39 +1,54 @@
+from __future__ import annotations
+
 import logging
 import pickle
+from typing import Tuple
+
 import pandas as pd
 
 from app.overpass.location import Location
-from app.config import NODES_PATH, GRAPH_PATH, INDEX_PATH
+from app.paths import NODES_PATH, GRAPH_PATH, INDEX_PATH
+from app.routing.spatial_index import SpatialIndex
 
 
 class Graph:
-    instance = None
+    __instance__ = None
 
-    def __init__(self, graph, nodes, index):
+    def __init__(self, graph: dict, nodes: pd.DataFrame, index: SpatialIndex):
         self.graph = graph
         self.nodes = nodes
         self.index = index
 
     @classmethod
-    def load_default(cls):
-        if cls.instance is None:
-            logging.debug('load nodes from file')
-            nodes = pd.read_pickle(NODES_PATH)
-            logging.debug('load graph from file')
-            with open(GRAPH_PATH, 'rb') as handle:
-                graph = pickle.load(handle)
-            logging.debug('load graph finished')
-            logging.debug('load spatial index from file')
-            with open(INDEX_PATH, 'rb') as handle:
-                index = pickle.load(handle)
-            logging.debug('load spatial index finished')
-            cls.instance = Graph(graph, nodes, index)
-        return cls.instance
+    def load_default(cls) -> Graph:
+        if cls.__instance__ is None:
+            nodes = cls._read_nodes()
+            graph = cls._read_graph()
+            index = cls._read_index()
+            cls.__instance__ = Graph(graph, nodes, index)
+        return cls.__instance__
 
-    def path_of(self, node_id_sequence):
+    @staticmethod
+    def _read_nodes() -> pd.DataFrame:
+        logging.debug('load nodes from file')
+        return pd.read_pickle(NODES_PATH)
+
+    @staticmethod
+    def _read_graph() -> dict:
+        logging.debug('load graph from file')
+        with GRAPH_PATH.open(mode='rb') as file:
+            return pickle.load(file)
+
+    @staticmethod
+    def _read_index() -> SpatialIndex:
+        logging.debug('load spatial index from file')
+        with INDEX_PATH.open(mode='rb') as file:
+            return pickle.load(file)
+
+    def path_of(self, node_id_sequence) -> pd.DataFrame:
         return self.nodes.loc[node_id_sequence]
 
-    def closest_to(self, location: Location):
+    def closest_to(self, location: Location) -> Tuple[pd.Series, float]:
         return self.index.closest_to(location)
 
     @property

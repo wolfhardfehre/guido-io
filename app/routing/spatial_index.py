@@ -5,7 +5,8 @@ import numpy as np
 from scipy.spatial import KDTree
 from app.overpass.location import Location
 from app.routing.feeds.feed import LATITUDE, LONGITUDE
-from app.config import logging, NODES_PATH
+from app.config import logging
+from app.paths import NODES_PATH
 
 
 class SpatialIndex:
