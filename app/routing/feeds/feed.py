@@ -1,7 +1,7 @@
 import abc
 import logging
 import pandas as pd
-from app.config import NODES_PATH, EDGES_PATH
+from app.paths import NODES_PATH, EDGES_PATH
 from app.utils.geoutils import meters
 
 FROM_NODE = 'origin'

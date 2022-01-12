@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import logging
 import pickle
 
 from app.commons.progress_bar import ProgressBar
-from app.config import NODES_PATH, GRAPH_PATH, INDEX_PATH
+from app.paths import NODES_PATH, GRAPH_PATH, INDEX_PATH
 from app.routing.feeds.factory import ACCEPTABLE_FEED_TYPES, Factory
 from app.routing.feeds.feed import Feed
 from app.routing.spatial_index import SpatialIndex
@@ -18,33 +20,31 @@ class GraphBuilder:
         logging.debug('finished building graph')
 
     @classmethod
-    def build(cls, feed: Feed):
+    def build(cls, feed: Feed) -> GraphBuilder:
         if feed.type in ACCEPTABLE_FEED_TYPES:
             return GraphBuilder(feed)
-        else:
-            raise RuntimeError(f'No valid feed type selected. '
-                               f'Valid feed types are {" or ".join(ACCEPTABLE_FEED_TYPES)}!')
+        raise RuntimeError(f'No valid feed type selected. Valid feed types are {" or ".join(ACCEPTABLE_FEED_TYPES)}!')
 
-    def save(self):
+    def save(self) -> None:
         self._save_nodes()
         self._save_routing_graph()
         self._save_spatial_index()
 
-    def _save_nodes(self):
+    def _save_nodes(self) -> None:
         logging.debug(f'Saving {len(self.nodes)} nodes')
         self.nodes.to_pickle(NODES_PATH)
 
-    def _save_routing_graph(self):
+    def _save_routing_graph(self) -> None:
         logging.debug(f'Saving graph with {len(self.graph)} nodes')
-        with open(GRAPH_PATH, 'wb') as handle:
+        with GRAPH_PATH.open(mode='wb') as handle:
             pickle.dump(self.graph, handle)
 
-    def _save_spatial_index(self):
+    def _save_spatial_index(self) -> None:
         logging.debug(f'Saving spatial index')
-        with open(INDEX_PATH, 'wb') as handle:
+        with INDEX_PATH.open(mode='wb') as handle:
             pickle.dump(self.index, handle)
 
-    def _build_graph(self, feed_name):
+    def _build_graph(self, feed_name: str) -> dict:
         logging.debug('building graph')
         adjacent = {}
         prefix = f'Building Graph [{feed_name}]'
