@@ -3,7 +3,8 @@ from __future__ import annotations
 import logging
 import pickle
 
-from app.commons.progress_bar import ProgressBar
+from tqdm import tqdm
+
 from app.paths import NODES_PATH, GRAPH_PATH, INDEX_PATH
 from app.routing.feeds.factory import ACCEPTABLE_FEED_TYPES, Factory
 from app.routing.feeds.feed import Feed
@@ -48,9 +49,7 @@ class GraphBuilder:
         logging.debug('building graph')
         adjacent = {}
         prefix = f'Building Graph [{feed_name}]'
-        progress_bar = ProgressBar(total=self.edges.shape[0], prefix=prefix)
-        for row in self.edges.sort_index().itertuples():
-            progress_bar.update()
+        for row in tqdm(self.edges.sort_index().itertuples(), desc=prefix):
             index = row.origin
             if index not in adjacent:
                 adjacent[index] = {'neighbors': {}}
@@ -66,6 +65,8 @@ if __name__ == '__main__':
         country='germany',
         state='berlin'
     )
+    logging.info('building graph')
     builder = GraphBuilder.build(feed=selected_feed)
+    logging.info('saving graph')
     builder.save()
     logging.debug('finished building and saving the graph')
