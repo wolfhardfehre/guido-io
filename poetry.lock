@@ -131,12 +131,31 @@ python-versions = ">=3.5.0"
 unicode_backport = ["unicodedata2"]
 
 [[package]]
+name = "cloudpickle"
+version = "2.0.0"
+description = "Extended pickling support for Python objects"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
 name = "colorama"
 version = "0.4.4"
 description = "Cross-platform colored terminal text."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+
+[[package]]
+name = "commonmark"
+version = "0.9.1"
+description = "Python parser for the CommonMark Markdown spec"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.extras]
+test = ["flake8 (==3.7.8)", "hypothesis (==3.55.3)"]
 
 [[package]]
 name = "debugpy"
@@ -662,6 +681,14 @@ optional = false
 python-versions = ">=3.8"
 
 [[package]]
+name = "nvidia-ml-py"
+version = "11.515.0"
+description = "Python Bindings for the NVIDIA Management Library"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "packaging"
 version = "21.3"
 description = "Core utilities for Python packages"
@@ -878,6 +905,36 @@ socks = ["PySocks (>=1.5.6,!=1.5.7)", "win-inet-pton"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<5)"]
 
 [[package]]
+name = "rich"
+version = "11.0.0"
+description = "Render rich text, tables, progress bars, syntax highlighting, markdown and more to the terminal"
+category = "dev"
+optional = false
+python-versions = ">=3.6.2,<4.0.0"
+
+[package.dependencies]
+colorama = ">=0.4.0,<0.5.0"
+commonmark = ">=0.9.0,<0.10.0"
+pygments = ">=2.6.0,<3.0.0"
+
+[package.extras]
+jupyter = ["ipywidgets (>=7.5.1,<8.0.0)"]
+
+[[package]]
+name = "scalene"
+version = "1.4.0"
+description = "Scalene: A high-resolution, low-overhead CPU, GPU, and memory profiler for Python"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+cloudpickle = ">=1.5.0"
+numpy = "*"
+nvidia-ml-py = ">=11.450.51"
+rich = ">=9.2.0"
+
+[[package]]
 name = "scikit-learn"
 version = "1.0.2"
 description = "A set of python modules for machine learning and data mining"
@@ -981,6 +1038,22 @@ optional = false
 python-versions = ">= 3.5"
 
 [[package]]
+name = "tqdm"
+version = "4.62.3"
+description = "Fast, Extensible Progress Meter"
+category = "main"
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[package.extras]
+dev = ["py-make (>=0.1.0)", "twine", "wheel"]
+notebook = ["ipywidgets (>=6)"]
+telegram = ["requests"]
+
+[[package]]
 name = "traitlets"
 version = "5.1.1"
 description = "Traitlets Python configuration system"
@@ -1081,7 +1154,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "3.8"
-content-hash = "3b33f6cc64d41242c6230772302a8f4d3b25f8e4b59fb792cc5d3b0effa4db4e"
+content-hash = "2755036a5f246540e4ca64fe53a63758389c3628463714d622f8ed948ad41c98"
 
 [metadata.files]
 anyio = [
@@ -1195,9 +1268,17 @@ charset-normalizer = [
     {file = "charset-normalizer-2.0.10.tar.gz", hash = "sha256:876d180e9d7432c5d1dfd4c5d26b72f099d503e8fcc0feb7532c9289be60fcbd"},
     {file = "charset_normalizer-2.0.10-py3-none-any.whl", hash = "sha256:cb957888737fc0bbcd78e3df769addb41fd1ff8cf950dc9e7ad7793f1bf44455"},
 ]
+cloudpickle = [
+    {file = "cloudpickle-2.0.0-py3-none-any.whl", hash = "sha256:6b2df9741d06f43839a3275c4e6632f7df6487a1f181f5f46a052d3c917c3d11"},
+    {file = "cloudpickle-2.0.0.tar.gz", hash = "sha256:5cd02f3b417a783ba84a4ec3e290ff7929009fe51f6405423cfccfadd43ba4a4"},
+]
 colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
+]
+commonmark = [
+    {file = "commonmark-0.9.1-py2.py3-none-any.whl", hash = "sha256:da2f38c92590f83de410ba1a3cbceafbc74fee9def35f9251ba9a971d6d66fd9"},
+    {file = "commonmark-0.9.1.tar.gz", hash = "sha256:452f9dc859be7f06631ddcb328b6919c67984aca654e5fefb3914d54691aed60"},
 ]
 debugpy = [
     {file = "debugpy-1.5.1-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_12_x86_64.manylinux2010_x86_64.whl", hash = "sha256:70b422c63a833630c33e3f9cdbd9b6971f8c5afd452697e464339a21bbe862ba"},
@@ -1429,6 +1510,10 @@ numpy = [
     {file = "numpy-1.22.0-pp38-pypy38_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:bb02929b0d6bfab4c48a79bd805bd7419114606947ec8284476167415171f55b"},
     {file = "numpy-1.22.0.zip", hash = "sha256:a955e4128ac36797aaffd49ab44ec74a71c11d6938df83b1285492d277db5397"},
 ]
+nvidia-ml-py = [
+    {file = "nvidia-ml-py-11.515.0.tar.gz", hash = "sha256:8b064f97e30de27f0fc32dd618b8a57b2cf3263c1346142f0566512247996d9d"},
+    {file = "nvidia_ml_py-11.515.0-py3-none-any.whl", hash = "sha256:f0b9295adfa82c57202520b86caa9d1b319292a8caed5b95646ac46c6f28405e"},
+]
 packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
     {file = "packaging-21.3.tar.gz", hash = "sha256:dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb"},
@@ -1626,6 +1711,24 @@ requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},
     {file = "requests-2.27.1.tar.gz", hash = "sha256:68d7c56fd5a8999887728ef304a6d12edc7be74f1cfa47714fc8b414525c9a61"},
 ]
+rich = [
+    {file = "rich-11.0.0-py3-none-any.whl", hash = "sha256:d7a8086aa1fa7e817e3bba544eee4fd82047ef59036313147759c11475f0dafd"},
+    {file = "rich-11.0.0.tar.gz", hash = "sha256:c32a8340b21c75931f157466fefe81ae10b92c36a5ea34524dff3767238774a4"},
+]
+scalene = [
+    {file = "scalene-1.4.0-cp310-cp310-macosx_10_15_universal2.whl", hash = "sha256:0407813d14a2fbf4e474211cc70c0351a62130d6d1a55a7a3268ff9d98bee472"},
+    {file = "scalene-1.4.0-cp310-cp310-manylinux_2_24_x86_64.whl", hash = "sha256:991b284c524a5c4592580abd23b94f430875cad59ab996d3be3db718fe270fdb"},
+    {file = "scalene-1.4.0-cp310-cp310-win_amd64.whl", hash = "sha256:490ef851a633aaf016da234d5618dfb8f6a6001261b33956de1e17b1838ba67c"},
+    {file = "scalene-1.4.0-cp37-cp37m-macosx_10_14_universal2.whl", hash = "sha256:d88ace79d1a715d9504fe897ae759955c1748d06fdc9847ee539386d4baa2533"},
+    {file = "scalene-1.4.0-cp37-cp37m-manylinux_2_24_x86_64.whl", hash = "sha256:0b9a1cd91f7a9566a1054f84f73d4f96380e7c97816d5d04aa9bf90e9fe8c821"},
+    {file = "scalene-1.4.0-cp38-cp38-macosx_10_14_universal2.whl", hash = "sha256:8b6e8e8330a965b36d3927ab6751f3429609fe1d40ac0f3ca741998367e106e6"},
+    {file = "scalene-1.4.0-cp38-cp38-manylinux_2_24_x86_64.whl", hash = "sha256:e28d3cc252b3bd9ea814bf2898b3871edf7dc7bad40b70f61ab9f4fd85abfb5d"},
+    {file = "scalene-1.4.0-cp38-cp38-win_amd64.whl", hash = "sha256:0183f6d7684654d983e852b13cad132ac9b7c70bd54a0ad37b3b1cce3521e788"},
+    {file = "scalene-1.4.0-cp39-cp39-macosx_10_14_universal2.whl", hash = "sha256:85f273f3e06fc98e8817e02bdeaff9c42f7976c23eadc492aa045549523007a5"},
+    {file = "scalene-1.4.0-cp39-cp39-manylinux_2_24_x86_64.whl", hash = "sha256:d14ba3d4db4a4ec7dc2f23ba617359e500fb9cdd24736874733f823ced33731b"},
+    {file = "scalene-1.4.0-cp39-cp39-win_amd64.whl", hash = "sha256:1c58bb4fd4183724d8811ffde0034ebbe4777bc3bb13b2a6083d06d5d654be94"},
+    {file = "scalene-1.4.0.tar.gz", hash = "sha256:c195fd62373102f22bd528a7b157c053db4b080ed9966b9ecd2aaf99b1d6c25c"},
+]
 scikit-learn = [
     {file = "scikit-learn-1.0.2.tar.gz", hash = "sha256:b5870959a5484b614f26d31ca4c17524b1b0317522199dc985c3b4256e030767"},
     {file = "scikit_learn-1.0.2-cp310-cp310-macosx_10_13_x86_64.whl", hash = "sha256:da3c84694ff693b5b3194d8752ccf935a665b8b5edc33a283122f4273ca3e687"},
@@ -1754,6 +1857,10 @@ tornado = [
     {file = "tornado-6.1-cp39-cp39-win32.whl", hash = "sha256:d3d20ea5782ba63ed13bc2b8c291a053c8d807a8fa927d941bd718468f7b950c"},
     {file = "tornado-6.1-cp39-cp39-win_amd64.whl", hash = "sha256:548430be2740e327b3fe0201abe471f314741efcb0067ec4f2d7dcfb4825f3e4"},
     {file = "tornado-6.1.tar.gz", hash = "sha256:33c6e81d7bd55b468d2e793517c909b139960b6c790a60b7991b9b6b76fb9791"},
+]
+tqdm = [
+    {file = "tqdm-4.62.3-py2.py3-none-any.whl", hash = "sha256:8dd278a422499cd6b727e6ae4061c40b48fce8b76d1ccbf5d34fca9b7f925b0c"},
+    {file = "tqdm-4.62.3.tar.gz", hash = "sha256:d359de7217506c9851b7869f3708d8ee53ed70a1b8edbba4dbcb47442592920d"},
 ]
 traitlets = [
     {file = "traitlets-5.1.1-py3-none-any.whl", hash = "sha256:2d313cc50a42cd6c277e7d7dc8d4d7fedd06a2c215f78766ae7b1a66277e0033"},

@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import List, Tuple
 
 import pandas as pd
+from tqdm import tqdm
 
-from app.commons.progress_bar import ProgressBar
 from app.osm.pbf.pbf_file import PbfFile
 from app.osm.pbf.pbf_primitive_block import PdfPrimitiveBlock
 from app.paths import DATA_PATH, CACHE_PATH
@@ -76,9 +76,7 @@ class PbfParser:
             results = []
             blobs = [b for b in pbf_file.blobs()]
             prefix = f'Parsing Protobuf [{self.area_name}]'
-            progress_bar = ProgressBar(total=len(blobs), prefix=prefix)
-            for result in pool.imap(parse_block, blobs):
-                progress_bar.update()
+            for result in tqdm(pool.imap(parse_block, blobs), desc=prefix):
                 results.append(result)
         return results
 

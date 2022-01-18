@@ -4,8 +4,8 @@ from typing import Any, List
 
 import requests
 from requests import Response
+from tqdm import tqdm
 
-from app.commons.progress_bar import ProgressBar
 from app.paths import CACHE_PATH
 
 
@@ -45,11 +45,11 @@ class Geofabrik:
     def _write_chunks(filepath: Path, stream: Response) -> None:
         total = int(stream.headers['Content-Length'])
         prefix = f'Downloading [{filepath.stem}]'
-        progress_bar = ProgressBar(total=total, prefix=prefix)
-        with filepath.open(mode='wb') as file:
-            for chunk in stream.iter_content(chunk_size=Geofabrik.CHUNK_SIZE):
-                file.write(chunk)
-                progress_bar.update(len(chunk))
+        with tqdm(total=total, desc=prefix) as progress_bar:
+            with filepath.open(mode='wb') as file:
+                for chunk in stream.iter_content(chunk_size=Geofabrik.CHUNK_SIZE):
+                    file.write(chunk)
+                    progress_bar.update(len(chunk))
 
 
 if __name__ == '__main__':
