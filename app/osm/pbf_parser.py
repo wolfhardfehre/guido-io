@@ -8,7 +8,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from app.osm.pbf.pbf_file import PbfFile
-from app.osm.pbf.pbf_primitive_block import PdfPrimitiveBlock
+from app.osm.pbf.pbf_primitive_block import PbfPrimitiveBlock
 from app.paths import CACHE_PATH
 
 PATTERN = f'{CACHE_PATH}/(.*)-latest'
@@ -18,8 +18,8 @@ WAY_COLUMNS = ['type', 'origin', 'destination', 'highway', 'oneway', 'max_speed'
 
 def parse_block(blob: dict) -> List[Tuple]:
     filename, offset, size = blob['file_name'], blob['blob_position'], blob['blob_size']
-    block_parser = PdfPrimitiveBlock(filename, offset, size)
-    return [e for es in block_parser.parse() for e in es]
+    block = PbfPrimitiveBlock(filename, offset, size)
+    return [element for elements in block.parse() for element in elements]
 
 
 class PbfParser:
@@ -75,7 +75,7 @@ class PbfParser:
     def _parse_parallel(self, pbf_file: PbfFile) -> List[Tuple]:
         with Pool(processes=cpu_count()) as pool:
             results = []
-            blobs = [b for b in pbf_file.blobs()]
+            blobs = [blob for blob in pbf_file.blobs()]
             prefix = f'Parsing Protobuf [{self.area_name}]'
             for result in tqdm(pool.imap(parse_block, blobs), desc=prefix):
                 results.append(result)
@@ -83,7 +83,7 @@ class PbfParser:
 
     def _merge(self, results: List[Tuple]) -> None:
         logging.debug('separating nodes, ways and relations')
-        nodes, ways, relations = [], [], []
+        nodes, ways = [], []
         for elements in results:
             if not elements:
                 continue
@@ -100,7 +100,9 @@ class PbfParser:
 
 
 if __name__ == '__main__':
-    filepath = CACHE_PATH / 'berlin-latest.osm.pbf'
-    parser = PbfParser(filepath=filepath, use_cache=True)
+    parser = PbfParser(
+        filepath=CACHE_PATH / 'berlin-latest.osm.pbf',
+        use_cache=True
+    )
     print(parser.nodes.head())
     print(parser.ways.head())

@@ -1,11 +1,12 @@
 import logging
 from pathlib import Path
-from typing import Any, List
+from typing import List
 
 import requests
 from requests import Response
 from tqdm import tqdm
 
+from app.osm.geofabrik.regions import Regions
 from app.paths import CACHE_PATH
 
 
@@ -14,8 +15,8 @@ class Geofabrik:
     CHUNK_SIZE = 50 * 1024
 
     @classmethod
-    def fetch(cls, **kwargs) -> Path:
-        address = cls._address(**kwargs)
+    def fetch(cls, region: str) -> Path:
+        address = cls._address(region)
         filepath = CACHE_PATH / f'{address[-1]}-latest.osm.pbf'
         if not filepath.exists():
             url = f'{Geofabrik.BASE_URL}/{"/".join(address)}-latest.osm.pbf'
@@ -27,12 +28,19 @@ class Geofabrik:
         return filepath
 
     @staticmethod
-    def _address(**kwargs: Any) -> List['str']:
-        continent = kwargs.get('continent', None)
-        country = kwargs.get('country', None)
-        state = kwargs.get('state', None)
-        addresses = [continent, country, state]
-        return [address for address in addresses if address]
+    def _address(region: str) -> List[str]:
+        regions = Regions.load()
+        row = None
+        collected_columns = []
+        for column in ['continent', 'country', 'state']:
+            collected_columns.append(column)
+            indices = regions.index[regions[column] == region].tolist()
+            if indices:
+                row = regions.iloc[indices[0]]
+                break
+        if row is None:
+            raise AttributeError("Can't find region %s!", region)
+        return [row[column] for column in collected_columns]
 
     @classmethod
     def _download(cls, url: str, filepath: Path) -> Path:
@@ -53,8 +61,4 @@ class Geofabrik:
 
 
 if __name__ == '__main__':
-    Geofabrik.fetch(
-        continent='europe',
-        country='germany',
-        state='berlin'
-    )
+    Geofabrik.fetch(region='berlin')

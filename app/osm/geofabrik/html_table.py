@@ -1,5 +1,5 @@
 import pandas as pd
-from bs4 import Tag
+from bs4.element import Tag
 
 
 class HtmlTable:

@@ -40,7 +40,6 @@ class Routing:
     def path(self, origin: Location, destination: Location) -> Path:
         origin_node: pd.Series = self.graph.closest_to(origin)[0]
         destination_node: pd.Series = self.graph.closest_to(destination)[0]
-        print(origin_node)
         shortest_path, distance = self.algorithm.shortest_path(
             origin=origin_node.name,
             destination=destination_node.name

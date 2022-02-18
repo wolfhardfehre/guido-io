@@ -1,25 +1,23 @@
-from pathlib import Path
-from typing import Union, Iterable
+from typing import Iterable, Optional
 
 import pandas as pd
 import requests
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup
+from bs4.element import Tag
 
-from app.osm.available_zones.collection import Collection
-from app.osm.available_zones.html_table import HtmlTable
-from app.paths import CACHE_PATH
+from app.commons.cache import cache
+from app.osm.geofabrik.collection import Collection
+from app.osm.geofabrik.html_table import HtmlTable
 
 
-class AvailableZones:
-    FILE_PATH: Path = CACHE_PATH / 'available_zones.csv'
-    BASE_URL: str = 'https://download.geofabrik.de'
+class Regions:
+    _BASE_URL_: str = 'https://download.geofabrik.de'
 
     @classmethod
-    def fetch(cls, file_path: Union[Path, None] = FILE_PATH) -> pd.DataFrame:
+    @cache
+    def load(cls) -> pd.DataFrame:
         collection = cls._collection()
-        url_tree = collection.url_tree
-        url_tree.to_csv(file_path, index=False)
-        return url_tree
+        return collection.url_tree
 
     @classmethod
     def _collection(cls) -> Collection:
@@ -72,11 +70,12 @@ class AvailableZones:
         return collection
 
     @classmethod
-    def _fetch_tables(cls, series: Union[pd.Series, None] = None) -> Iterable[pd.DataFrame]:
+    def _fetch_tables(cls, series: Optional[pd.Series] = None) -> Iterable[pd.DataFrame]:
         url = cls._url(series=series)
         return cls._fetch_from(url=url)
 
     @classmethod
+    @cache(sub_folder='geofabrik')
     def _fetch_from(cls, url: str) -> Iterable[pd.DataFrame]:
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -88,7 +87,11 @@ class AvailableZones:
         return html_table.frame
 
     @staticmethod
-    def _url(series: Union[pd.Series, None], url: str = BASE_URL) -> str:
+    def _url(series: Optional[pd.Series], url: str = _BASE_URL_) -> str:
         if series is None:
             return url
         return f'{url}/{series["sub_region_link"]}'
+
+
+if __name__ == '__main__':
+    print(Regions.load())

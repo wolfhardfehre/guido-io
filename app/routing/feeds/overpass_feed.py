@@ -3,10 +3,11 @@ import pandas as pd
 from app.overpass.location import Location
 from app.overpass.ways import Ways
 from app.routing.feeds.feed import Feed, NODE_ID, LATITUDE, LONGITUDE, FROM_NODE, TO_NODE, DISTANCE
+from app.routing.feeds.feed_type import FeedType
 
 
 class OverpassFeed(Feed):
-    __TYPE__ = 'overpass'
+    __TYPE__: FeedType = FeedType.OVERPASS
 
     @classmethod
     def around(cls, longitude, latitude, **kwargs):

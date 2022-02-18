@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Union
+from typing import List, Optional
 import pandas as pd
 
 
@@ -7,7 +7,7 @@ import pandas as pd
 class Collection:
     frames: List[pd.DataFrame] = field(default_factory=list)
     countries_to_drop: List[str] = field(default_factory=list)
-    continent: Union[pd.Series, None] = None
+    continent: Optional[pd.Series] = None
 
     @property
     def url_tree(self) -> pd.DataFrame:

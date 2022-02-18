@@ -1,18 +1,17 @@
+from typing import Any
+
 from app.routing.feeds.feed import Feed
+from app.routing.feeds.feed_type import FeedType
 from app.routing.feeds.osm_feed import OsmFeed
 from app.routing.feeds.overpass_feed import OverpassFeed
-
-ACCEPTABLE_FEED_TYPES = ['osm', 'overpass']
 
 
 class Factory:
 
     @classmethod
-    def feed_of(cls, type, **kwargs) -> Feed:
-        if type == 'osm':
+    def feed_of(cls, feed_type: FeedType, **kwargs: Any) -> Feed:
+        if feed_type == FeedType.OSM:
             return OsmFeed.area(**kwargs)
-        elif type == 'overpass':
+        elif feed_type == FeedType.OVERPASS:
             return OverpassFeed.around(**kwargs)
-        else:
-            raise ValueError(f'Unknown feed type: {type}! '
-                             f'Please choose one of these -> {ACCEPTABLE_FEED_TYPES}.')
+        raise ValueError(f'Unknown feed type: {feed_type}! Please choose one of: {FeedType}')

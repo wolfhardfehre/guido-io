@@ -1,7 +1,10 @@
 import abc
 import logging
+from typing import Optional
+
 import pandas as pd
 from app.paths import NODES_PATH, EDGES_PATH
+from app.routing.feeds.feed_type import FeedType
 from app.utils.geoutils import meters
 
 FROM_NODE = 'origin'
@@ -13,7 +16,7 @@ LONGITUDE = 'lon'
 
 
 class Feed(abc.ABC):
-    __TYPE__ = None
+    __TYPE__: Optional[FeedType] = None
 
     def __init__(self):
         self.nodes = self._nodes()
@@ -26,7 +29,7 @@ class Feed(abc.ABC):
         self.edges.to_pickle(EDGES_PATH)
 
     @property
-    def type(self):
+    def type(self) -> FeedType:
         return self.__TYPE__
 
     @property
@@ -52,7 +55,7 @@ class Feed(abc.ABC):
     @staticmethod
     def _compute_distances(edges):
         logging.debug('compute distances')
-        edges.loc[:, DISTANCE] = meters(
+        edges[DISTANCE] = meters(
             edges[LATITUDE],
             edges[LONGITUDE],
             edges[f'{LATITUDE}_to'],
