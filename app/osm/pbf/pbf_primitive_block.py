@@ -1,6 +1,8 @@
 from typing import List
 
 import numpy as np
+
+from app.osm.pbf.blob_meta import BlobMeta
 from app.osm.pbf.osm_pb2 import PrimitiveBlock, StringTable
 from app.commons.io import read_blob
 
@@ -13,8 +15,8 @@ MEMBER_TYPE = {
 
 class PbfPrimitiveBlock:
 
-    def __init__(self, filename, blob_pos, blob_size):
-        data = read_blob(filename, blob_pos, blob_size)
+    def __init__(self, blob_meta: BlobMeta):
+        data = read_blob(blob_meta)
         primitive_block = PrimitiveBlock()
         primitive_block.ParseFromString(data)
         self.primitive_group = primitive_block.primitivegroup
