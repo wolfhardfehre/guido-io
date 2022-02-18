@@ -3,6 +3,7 @@ import zlib
 from pathlib import Path
 from typing import Any
 
+from app.osm.pbf.blob_meta import BlobMeta
 from app.osm.pbf.osm_pb2 import Blob
 
 
@@ -16,10 +17,10 @@ def write(content: Any, filepath: Path) -> Any:
         pickle.dump(content, file)
 
 
-def read_blob(filepath: Path, blob_position: int, blob_size: int) -> bytes:
-    with filepath.open(mode='rb') as file:
-        file.seek(blob_position)
-        blob_data = file.read(blob_size)
+def read_blob(blob_meta: BlobMeta) -> bytes:
+    with blob_meta.filepath.open(mode='rb') as file:
+        file.seek(blob_meta.position)
+        blob_data = file.read(blob_meta.size)
     blob = Blob()
     blob.ParseFromString(blob_data)
     raw_data = blob.raw

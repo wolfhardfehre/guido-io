@@ -7,6 +7,7 @@ from typing import List, Tuple
 import pandas as pd
 from tqdm import tqdm
 
+from app.osm.pbf.blob_meta import BlobMeta
 from app.osm.pbf.pbf_file import PbfFile
 from app.osm.pbf.pbf_primitive_block import PbfPrimitiveBlock
 from app.paths import CACHE_PATH
@@ -16,9 +17,8 @@ NODE_COLUMNS = ['type', 'id', 'lon', 'lat']
 WAY_COLUMNS = ['type', 'origin', 'destination', 'highway', 'oneway', 'max_speed', 'access']
 
 
-def parse_block(blob: dict) -> List[Tuple]:
-    filename, offset, size = blob['file_name'], blob['blob_position'], blob['blob_size']
-    block = PbfPrimitiveBlock(filename, offset, size)
+def parse_block(blob_meta: BlobMeta) -> List[Tuple]:
+    block = PbfPrimitiveBlock(blob_meta=blob_meta)
     return [element for elements in block.parse() for element in elements]
 
 
