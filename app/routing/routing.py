@@ -1,3 +1,7 @@
+from typing import Tuple
+
+import pandas as pd
+
 from app.overpass.location import Location
 from app.routing.algorithms.algorithm import Algorithm
 from app.routing.graph import Graph
@@ -12,33 +16,34 @@ class Routing:
         self._algorithm = Dijkstra()
 
     @property
-    def bounds(self):
+    def bounds(self) -> Tuple[float, float, float, float]:
         return self._graph.bounds
 
     @property
-    def graph(self):
+    def graph(self) -> Graph:
         return self._graph
 
     @graph.setter
-    def graph(self, graph: Graph):
+    def graph(self, graph: Graph) -> None:
         self._graph = graph
         self._algorithm.graph = graph
 
     @property
-    def algorithm(self):
+    def algorithm(self) -> Algorithm:
         return self._algorithm
 
     @algorithm.setter
-    def algorithm(self, algorithm: Algorithm):
+    def algorithm(self, algorithm: Algorithm) -> None:
         self._algorithm = algorithm
         self._algorithm.graph = self.graph
 
-    def path(self, origin, destination):
-        origin_node, _ = self.graph.closest_to(origin)
-        destination_node, _ = self.graph.closest_to(destination)
+    def path(self, origin: Location, destination: Location) -> Path:
+        origin_node: pd.Series = self.graph.closest_to(origin)[0]
+        destination_node: pd.Series = self.graph.closest_to(destination)[0]
+        print(origin_node)
         shortest_path, distance = self.algorithm.shortest_path(
-            start=origin_node.name,
-            end=destination_node.name
+            origin=origin_node.name,
+            destination=destination_node.name
         )
         return Path(shortest_path, distance)
 

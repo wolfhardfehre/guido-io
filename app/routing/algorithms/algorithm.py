@@ -1,6 +1,5 @@
 import abc
 
-from app.overpass.location import Location
 from app.routing.graph import Graph
 
 
@@ -19,5 +18,5 @@ class Algorithm(abc.ABC):
         self._graph = graph
 
     @abc.abstractmethod
-    def shortest_path(self, origin: Location, destination: Location):
+    def shortest_path(self, origin: int, destination: int):
         raise NotImplementedError
