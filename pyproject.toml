@@ -19,6 +19,7 @@ jupyterlab = "^3.2.6"
 ipywidgets = "^7.6.5"
 ipyleaflet = "^0.15.0"
 scalene = "^1.4.0"
+invoke = "^1.6.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

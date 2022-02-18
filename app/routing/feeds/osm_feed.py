@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import logging
+from typing import Any
+
 import pandas as pd
 
 from app.osm.geofabrik import Geofabrik
@@ -31,10 +33,10 @@ class OsmFeed(Feed):
     __TYPE__ = 'osm'
 
     @classmethod
-    def area(cls, **kwargs) -> OsmFeed:
+    def area(cls, **kwargs: Any) -> OsmFeed:
         use_cache = kwargs.get('use_cache', True)
-        file_name = Geofabrik.fetch(**kwargs)
-        parser = PbfParser(file_name, use_cache=use_cache)
+        filepath = Geofabrik.fetch(**kwargs)
+        parser = PbfParser(filepath, use_cache=use_cache)
         logging.debug(f'before: {parser.ways.shape[0]}')
         ways = parser.ways[parser.ways['highway'].isin(GOOD_HIGHWAYS)]
         logging.debug(f'after: {ways.shape[0]}')

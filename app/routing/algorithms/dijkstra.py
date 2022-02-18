@@ -9,28 +9,32 @@ from app.routing.algorithms.algorithm import Algorithm
 
 class Dijkstra(Algorithm):
 
-    def shortest_path(self, start: int, end: int) -> Tuple[pd.DataFrame, float]:
+    def shortest_path(
+            self,
+            origin: int,
+            destination: int
+    ) -> Tuple[pd.DataFrame, float]:
         logging.debug('running dijkstra')
-        distances, predecessors = self._dijkstra(start, end)
-        distance = distances[end]
+        distances, predecessors = self._dijkstra(origin, destination)
+        distance = distances[destination]
         node_id_sequence = []
         while True:
-            node_id_sequence.append(end)
-            if end == start:
+            node_id_sequence.append(destination)
+            if destination == origin:
                 break
-            end = predecessors[end]
+            destination = predecessors[destination]
         node_id_sequence.reverse()
         logging.debug('shortest path: %s', node_id_sequence)
         path_nodes = self._graph.path_of(node_id_sequence)
         return path_nodes, distance
 
-    def _dijkstra(self, start: int, end: int) -> Tuple[dict, dict]:
+    def _dijkstra(self, origin: int, destination: int) -> Tuple[dict, dict]:
         distances, predecessors = {}, {}
         queue = PriorityQueue()
-        queue.put((0, start))
+        queue.put((0, origin))
         while not queue.empty():
             d, v = queue.get()
-            if v == end:
+            if v == destination:
                 break
             if v not in self.graph:
                 continue
@@ -47,8 +51,8 @@ class Dijkstra(Algorithm):
 if __name__ == '__main__':
     dijkstra = Dijkstra()
     shortest_path, path_distance = dijkstra.shortest_path(
-        start=27785378,
-        end=2493824077
+        origin=27785378,
+        destination=2493824077
     )
     print(f'distance={path_distance}')
     print(shortest_path)

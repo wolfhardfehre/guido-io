@@ -1,6 +1,5 @@
 import logging
 from multiprocessing import Pool, cpu_count
-import os
 import re
 from pathlib import Path
 from typing import List, Tuple
@@ -12,11 +11,12 @@ from app.osm.pbf.pbf_file import PbfFile
 from app.osm.pbf.pbf_primitive_block import PdfPrimitiveBlock
 from app.paths import DATA_PATH, CACHE_PATH
 
+PATTERN = f'{CACHE_PATH}/(.*)-latest'
 NODE_COLUMNS = ['type', 'id', 'lon', 'lat']
 WAY_COLUMNS = ['type', 'origin', 'destination', 'highway', 'oneway', 'max_speed', 'access']
 
 
-def parse_block(blob) -> List[Tuple]:
+def parse_block(blob: dict) -> List[Tuple]:
     filename, offset, size = blob['file_name'], blob['blob_position'], blob['blob_size']
     block_parser = PdfPrimitiveBlock(filename, offset, size)
     return [e for es in block_parser.parse() for e in es]
@@ -36,8 +36,9 @@ class PbfParser:
         self._load_osm_elements()
 
     def _cut_out_area_name(self) -> str:
-        result = re.search(f'{CACHE_PATH}/(.*)-latest', str(self._filepath))
-        return result.group(1)
+        return re \
+            .search(PATTERN, str(self._filepath)) \
+            .group(1)
 
     def _load_osm_elements(self) -> None:
         if self._use_cache:
@@ -48,10 +49,10 @@ class PbfParser:
 
     def _load_from_pickle(self) -> None:
         logging.debug('trying to load osm nodes and ways from pickle files')
-        if os.path.isfile(self._nodes_path):
+        if self._nodes_path.exists():
             logging.info('reading osm nodes from: %s', self._nodes_path)
             self.nodes = pd.read_pickle(self._nodes_path)
-        if os.path.isfile(self._ways_path):
+        if self._ways_path.exists():
             logging.info('reading osm ways from: %s', self._ways_path)
             self.ways = pd.read_pickle(self._ways_path)
 
@@ -71,7 +72,7 @@ class PbfParser:
             logging.debug('saving osm ways to: %s', self._ways_path)
             self.ways.to_pickle(self._ways_path)
 
-    def _parse_parallel(self, pbf_file) -> List[Tuple]:
+    def _parse_parallel(self, pbf_file: PbfFile) -> List[Tuple]:
         with Pool(processes=cpu_count()) as pool:
             results = []
             blobs = [b for b in pbf_file.blobs()]
@@ -80,7 +81,7 @@ class PbfParser:
                 results.append(result)
         return results
 
-    def _merge(self, results) -> None:
+    def _merge(self, results: List[Tuple]) -> None:
         logging.debug('separating nodes, ways and relations')
         nodes, ways, relations = [], [], []
         for elements in results:
@@ -99,7 +100,7 @@ class PbfParser:
 
 
 if __name__ == '__main__':
-    file_name = DATA_PATH / 'germany-latest.osm.pbf'
-    parser = PbfParser(file_name, use_cache=True)
+    filepath = DATA_PATH / 'berlin-latest.osm.pbf'
+    parser = PbfParser(filepath=filepath, use_cache=True)
     print(parser.nodes.head())
     print(parser.ways.head())

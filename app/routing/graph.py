@@ -52,7 +52,7 @@ class Graph:
         return self.index.closest_to(location)
 
     @property
-    def bounds(self):
+    def bounds(self) -> Tuple[float, float, float, float]:
         return self.index.bounds
 
 
