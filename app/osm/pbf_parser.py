@@ -9,7 +9,7 @@ from tqdm import tqdm
 
 from app.osm.pbf.pbf_file import PbfFile
 from app.osm.pbf.pbf_primitive_block import PdfPrimitiveBlock
-from app.paths import DATA_PATH, CACHE_PATH
+from app.paths import CACHE_PATH
 
 PATTERN = f'{CACHE_PATH}/(.*)-latest'
 NODE_COLUMNS = ['type', 'id', 'lon', 'lat']
@@ -100,7 +100,7 @@ class PbfParser:
 
 
 if __name__ == '__main__':
-    filepath = DATA_PATH / 'berlin-latest.osm.pbf'
+    filepath = CACHE_PATH / 'berlin-latest.osm.pbf'
     parser = PbfParser(filepath=filepath, use_cache=True)
     print(parser.nodes.head())
     print(parser.ways.head())
