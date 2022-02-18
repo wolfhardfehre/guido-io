@@ -6,7 +6,8 @@ import pickle
 from tqdm import tqdm
 
 from app.paths import NODES_PATH, GRAPH_PATH, INDEX_PATH
-from app.routing.feeds.factory import ACCEPTABLE_FEED_TYPES, Factory
+from app.routing.feeds.factory import Factory
+from app.routing.feeds.feed_type import FeedType
 from app.routing.feeds.feed import Feed
 from app.routing.spatial_index import SpatialIndex
 
@@ -22,9 +23,9 @@ class GraphBuilder:
 
     @classmethod
     def build(cls, feed: Feed) -> GraphBuilder:
-        if feed.type in ACCEPTABLE_FEED_TYPES:
+        if feed.type in FeedType:
             return GraphBuilder(feed)
-        raise RuntimeError(f'No valid feed type selected. Valid feed types are {" or ".join(ACCEPTABLE_FEED_TYPES)}!')
+        raise RuntimeError(f'No valid feed type selected. Valid feed types are {" or ".join(FeedType)}!')
 
     def save(self) -> None:
         self._save_nodes()
@@ -60,10 +61,8 @@ class GraphBuilder:
 if __name__ == '__main__':
     logging.debug('fetching ways')
     selected_feed = Factory.feed_of(
-        type='osm',
-        continent='europe',
-        country='germany',
-        state='berlin'
+        feed_type=FeedType.OSM,
+        region='berlin'
     )
     logging.info('building graph')
     builder = GraphBuilder.build(feed=selected_feed)

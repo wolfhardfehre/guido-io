@@ -41,7 +41,7 @@ class PbfFile:
             )
 
     def _check_features(self, header: PbfHeader) -> None:
-        missing_features = header.required_features().difference(SUPPORTED_FEATURES)
+        missing_features = header.required_features.difference(SUPPORTED_FEATURES)
         if missing_features:
             missing_features_str = ", ".join(missing_features)
             message = f'{self._filepath} requires features not implemented by this parser: {missing_features_str}'

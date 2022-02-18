@@ -5,8 +5,9 @@ from typing import Any
 
 import pandas as pd
 
-from app.osm.geofabrik import Geofabrik
+from app.osm.geofabrik.geofabrik import Geofabrik
 from app.osm.pbf_parser import PbfParser
+from app.routing.feeds.feed_type import FeedType
 from app.routing.feeds.feed import Feed, NODE_ID, LATITUDE, LONGITUDE, FROM_NODE, TO_NODE, DISTANCE
 
 GOOD_HIGHWAYS = [
@@ -30,12 +31,12 @@ GOOD_HIGHWAYS = [
 
 
 class OsmFeed(Feed):
-    __TYPE__ = 'osm'
+    __TYPE__: FeedType = FeedType.OSM
 
     @classmethod
     def area(cls, **kwargs: Any) -> OsmFeed:
         use_cache = kwargs.get('use_cache', True)
-        filepath = Geofabrik.fetch(**kwargs)
+        filepath = Geofabrik.fetch(region=kwargs['region'])
         parser = PbfParser(filepath, use_cache=use_cache)
         logging.debug(f'before: {parser.ways.shape[0]}')
         ways = parser.ways[parser.ways['highway'].isin(GOOD_HIGHWAYS)]
@@ -83,7 +84,7 @@ class OsmFeed(Feed):
 
 
 if __name__ == '__main__':
-    feed = OsmFeed.area(continent='europe', country='germany', state='berlin')
+    feed = OsmFeed.area(region='berlin')
     logging.debug('finished')
     print(feed.nodes.head())
     print(feed.edges.head())

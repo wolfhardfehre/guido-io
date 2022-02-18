@@ -1,6 +1,8 @@
+from typing import List
+
 import numpy as np
-from app.osm.pbf.osm_pb2 import PrimitiveBlock
-from app.osm.pbf.pbf_utils import read_blob_data, decoded_string_table
+from app.osm.pbf.osm_pb2 import PrimitiveBlock, StringTable
+from app.commons.io import read_blob
 
 MEMBER_TYPE = {
     0: 'node',
@@ -9,15 +11,14 @@ MEMBER_TYPE = {
 }
 
 
-class PdfPrimitiveBlock:
+class PbfPrimitiveBlock:
 
     def __init__(self, filename, blob_pos, blob_size):
-        self.pos = filename, blob_pos, blob_size
-        data = read_blob_data(filename, blob_pos, blob_size)
+        data = read_blob(filename, blob_pos, blob_size)
         primitive_block = PrimitiveBlock()
         primitive_block.ParseFromString(data)
         self.primitive_group = primitive_block.primitivegroup
-        self._decoded = decoded_string_table(primitive_block.stringtable.s)
+        self._decoded = self._decoded_string_table(primitive_block.stringtable.s)
         self._granularity = primitive_block.granularity or 100
         self._lat_offset = primitive_block.lat_offset or 0
         self._lon_offset = primitive_block.lon_offset or 0
@@ -70,6 +71,10 @@ class PdfPrimitiveBlock:
     def relations(self, relations):
         for relation in relations:
             yield 2, relation.id, self._tags(relation), self._members(relation)
+
+    @staticmethod
+    def _decoded_string_table(string_table: StringTable) -> List[str]:
+        return [string.decode('utf-8') for string in string_table]
 
     def _members(self, relation):
         members = []
