@@ -16,9 +16,9 @@ class Geofabrik:
     @classmethod
     def fetch(cls, **kwargs) -> Path:
         address = cls._address(**kwargs)
-        url = f'{Geofabrik.BASE_URL}/{"/".join(address)}-latest.osm.pbf'
         filepath = CACHE_PATH / f'{address[-1]}-latest.osm.pbf'
         if not filepath.exists():
+            url = f'{Geofabrik.BASE_URL}/{"/".join(address)}-latest.osm.pbf'
             logging.debug('fetching data from %s', url)
             cls._download(url, filepath)
             logging.debug('Saved data in %s',  filepath)
