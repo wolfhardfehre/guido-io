@@ -16,7 +16,7 @@ tqdm = "^4.62.3"
 beautifulsoup4 = "^4.10.0"
 
 [tool.poetry.dev-dependencies]
-jupyterlab = "^3.2.6"
+jupyterlab = "^3.6.7"
 ipywidgets = "^7.6.5"
 ipyleaflet = "^0.15.0"
 scalene = "^1.4.0"
